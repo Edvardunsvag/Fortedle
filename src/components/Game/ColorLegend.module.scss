@@ -1,100 +1,13 @@
 @import '../../shared/styles/variables.scss';
 
-.container {
-  position: fixed;
-  bottom: $spacing-xl;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-}
-
-.toggleButton {
-  background-color: rgba($color-dark-fill, 0.9);
-  border: 2px solid $color-dark-accent;
-  border-radius: $radius-md;
-  color: $color-primary-beige;
-  padding: 0.75rem $spacing-lg;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all $transition-normal;
-  backdrop-filter: blur(10px);
-
-  &:hover {
-    background-color: rgba(lighten($color-dark-fill, 5%), 0.95);
-    border-color: $color-border-medium;
-  }
-
-  &:focus {
-    outline: 2px solid $color-link-blue;
-    outline-offset: 2px;
-  }
-}
-
 .legend {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: $spacing-md;
-  background: linear-gradient(135deg, $color-primary-beige 0%, $color-secondary-beige 100%);
-  border: 3px solid $color-dark-accent;
-  border-radius: $radius-lg;
-  padding: $spacing-lg;
-  min-width: 400px;
-  box-shadow: 0 8px 32px $color-shadow-dark;
-  backdrop-filter: blur(10px);
-}
-
-.legendHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: $spacing-lg;
-  padding-bottom: $spacing-md;
-  border-bottom: 1px solid $color-overlay-light;
-}
-
-.legendTitle {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: $color-dark-accent;
-  opacity: 0.7;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.closeButton {
-  background: none;
-  border: none;
-  color: $color-dark-accent;
-  font-size: 2rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: $radius-full;
-  transition: background-color $transition-normal;
-
-  &:hover {
-    background-color: $color-overlay-red;
-  }
-
-  &:focus {
-    outline: 2px solid $color-dark-accent;
-    outline-offset: 2px;
-  }
+  margin-top: $spacing-md;
 }
 
 .indicators {
   display: flex;
   gap: $spacing-lg;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 
@@ -149,19 +62,6 @@
 }
 
 @media (max-width: 768px) {
-  .container {
-    bottom: $spacing-md;
-  }
-
-  .legend {
-    min-width: 300px;
-    padding: $spacing-md;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    max-width: calc(100vw - $spacing-xl);
-  }
-
   .indicators {
     gap: $spacing-md;
   }

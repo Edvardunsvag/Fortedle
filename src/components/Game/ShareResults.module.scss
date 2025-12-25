@@ -3,9 +3,6 @@
 .container {
   margin-top: $spacing-xl;
   padding: $spacing-lg;
-  background-color: rgba($color-dark-fill, 0.8);
-  border: 2px solid $color-border-medium;
-  border-radius: $radius-md;
 }
 
 .inputGroup {
@@ -24,10 +21,7 @@
   width: 100%;
   padding: 0.75rem $spacing-md;
   font-size: 1rem;
-  border: 2px solid $color-border-medium;
-  border-radius: $radius-md;
-  background-color: $color-dark-fill;
-  color: $color-primary-beige;
+  color: $color-dark-accent;
   transition: border-color $transition-normal, box-shadow $transition-normal;
 
   &::placeholder {
@@ -48,12 +42,7 @@
   gap: $spacing-md;
 }
 
-.resultPreview {
-  background-color: $color-dark-accent;
-  border: 1px solid $color-border-medium;
-  border-radius: $radius-md;
-  padding: $spacing-md;
-}
+
 
 .resultText {
   margin: 0;
@@ -65,8 +54,10 @@
   line-height: 1.6;
 }
 
-.copyButton {
-  background-color: $color-success;
+
+
+.submitButton {
+  background-color: $color-link-blue;
   color: $color-white;
   border: none;
   border-radius: $radius-md;
@@ -76,18 +67,50 @@
   cursor: pointer;
   transition: background-color $transition-normal;
 
-  &:hover {
-    background-color: darken($color-success, 10%);
+  &:hover:not(:disabled) {
+    background-color: darken($color-link-blue, 10%);
   }
 
   &:focus {
-    outline: 2px solid $color-success;
+    outline: 2px solid $color-link-blue;
     outline-offset: 2px;
   }
 
-  &:active {
-    background-color: darken($color-success, 15%);
+  &:active:not(:disabled) {
+    background-color: darken($color-link-blue, 15%);
   }
+
+  &:disabled {
+    background-color: $color-light-grey;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.submitSection {
+  margin-bottom: $spacing-md;
+}
+
+.statusMessage {
+  color: $color-primary-beige;
+  font-size: 0.875rem;
+  margin: 0;
+  text-align: center;
+}
+
+.successMessage {
+  color: $color-success;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+.errorMessage {
+  color: $color-error;
+  font-size: 0.875rem;
+  margin: 0;
+  text-align: center;
 }
 
 @media (max-width: 768px) {

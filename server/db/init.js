@@ -38,6 +38,26 @@ export const initDatabase = async () => {
       CREATE INDEX IF NOT EXISTS idx_employees_updated_at ON employees(updated_at);
     `);
 
+    // Create leaderboard table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS leaderboard (
+        id SERIAL PRIMARY KEY,
+        player_name VARCHAR(255) NOT NULL,
+        score INTEGER NOT NULL,
+        date DATE NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(player_name, date)
+      );
+    `);
+
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_leaderboard_date ON leaderboard(date);
+    `);
+
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_leaderboard_date_score ON leaderboard(date, score);
+    `);
+
     console.log('Database initialized successfully');
   } catch (error) {
     console.error('Error initializing database:', error);

@@ -4,6 +4,7 @@ import { employeesReducer } from '@/features/employees';
 import { gameReducer } from '@/features/game';
 import { navigationReducer } from '@/features/navigation';
 import { authReducer } from '@/features/auth';
+import { leaderboardReducer } from '@/features/leaderboard';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     [FeatureKey.Game]: gameReducer,
     [FeatureKey.Navigation]: navigationReducer,
     [FeatureKey.Auth]: authReducer,
+    [FeatureKey.Leaderboard]: leaderboardReducer,
   },
 });
 

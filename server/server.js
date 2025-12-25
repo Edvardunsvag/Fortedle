@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { syncEmployees } from './routes/sync.js';
 import { getEmployees } from './routes/employees.js';
+import { getLeaderboard, submitScore } from './routes/leaderboard.js';
 import { initDatabase } from './db/init.js';
 
 dotenv.config();
@@ -22,6 +23,8 @@ app.get('/health', (req, res) => {
 // Routes
 app.post('/api/sync', syncEmployees);
 app.get('/api/employees', getEmployees);
+app.get('/api/leaderboard', getLeaderboard);
+app.post('/api/leaderboard', submitScore);
 
 // Initialize database and start server
 initDatabase()

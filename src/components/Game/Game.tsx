@@ -17,7 +17,6 @@ import { getTodayDateString, getDateSeed, selectIndexBySeed } from '@/shared/uti
 import GuessInput from './GuessInput';
 import GuessList from './GuessList';
 import GameStatus from './GameStatus';
-import ColorLegend from './ColorLegend';
 import ShareResults from './ShareResults';
 import styles from './Game.module.scss';
 
@@ -153,8 +152,6 @@ const Game = () => {
       {(gameStatus === 'won' || gameStatus === 'lost') && (
         <ShareResults guesses={guesses.length} isWon={gameStatus === 'won'} />
       )}
-
-      <ColorLegend />
     </div>
   );
 };

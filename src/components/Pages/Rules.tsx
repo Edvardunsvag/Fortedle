@@ -1,3 +1,4 @@
+import ColorLegend from '../Game/ColorLegend';
 import styles from './Pages.module.scss';
 
 const Rules = () => {
@@ -9,7 +10,7 @@ const Rules = () => {
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>How to Play</h2>
             <p className={styles.text}>
-              Guess the employee of the day! You have 6 attempts to figure out who the selected employee is.
+              Guess the employee of the day! You have infinite attempts to figure out who the selected employee is.
             </p>
           </section>
 
@@ -29,17 +30,13 @@ const Rules = () => {
 
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>Color Legend</h2>
-            <ul className={styles.list}>
-              <li><span className={styles.correct}>Green</span> - Correct match</li>
-              <li><span className={styles.partial}>Yellow</span> - Partial match</li>
-              <li><span className={styles.incorrect}>Red</span> - No match</li>
-            </ul>
+            <ColorLegend />
           </section>
 
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>Winning</h2>
             <p className={styles.text}>
-              Win by correctly guessing the employee within 6 attempts. The employee of the day changes daily, so come back tomorrow for a new challenge!
+              Win by correctly guessing the employee. The employee of the day changes daily, so come back tomorrow for a new challenge!
             </p>
           </section>
         </div>

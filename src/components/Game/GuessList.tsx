@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { Guess } from '@/features/game';
 import { HintType, HintResult } from '@/features/game';
 import FlipBox from './FlipBox';
@@ -10,20 +10,19 @@ interface GuessListProps {
 
 const GuessList = ({ guesses }: GuessListProps) => {
   const [animatedGuesses, setAnimatedGuesses] = useState<Set<number>>(new Set());
+  const previousLengthRef = useRef<number>(0);
 
   useEffect(() => {
-    // Reset animations when new guess is added
-    if (guesses.length > 0) {
+    // Only trigger animation when a new guess is added (length increases)
+    if (guesses.length > previousLengthRef.current) {
       const lastIndex = guesses.length - 1;
-      if (!animatedGuesses.has(lastIndex)) {
-        setAnimatedGuesses(new Set());
-        // Trigger animation for the new guess after a short delay
-        setTimeout(() => {
-          setAnimatedGuesses(new Set([lastIndex]));
-        }, 100);
-      }
+      // Trigger animation for the new guess after a short delay
+      setTimeout(() => {
+        setAnimatedGuesses(new Set([lastIndex]));
+      }, 100);
     }
-  }, [guesses.length, animatedGuesses]);
+    previousLengthRef.current = guesses.length;
+  }, [guesses.length]);
 
   if (guesses.length === 0) {
     return null;
@@ -61,9 +60,8 @@ const GuessList = ({ guesses }: GuessListProps) => {
               <th className={styles.headerCell}>Department</th>
               <th className={styles.headerCell}>Office</th>
               <th className={styles.headerCell}>Skills</th>
-              <th className={styles.headerCell}>Seniority</th>
               <th className={styles.headerCell}>Age</th>
-              <th className={styles.headerCell}>Year Started</th>
+              <th className={styles.headerCell}>Supervisor</th>
             </tr>
           </thead>
           <tbody>
@@ -75,7 +73,17 @@ const GuessList = ({ guesses }: GuessListProps) => {
               return (
                 <tr key={`${guess.employeeId}-${guessIndex}`} className={styles.guessRow}>
                   <td className={styles.employeeCell}>
-                    <div className={styles.employeeName}>{guess.employeeName}</div>
+                    <div className={styles.employeeName}>
+                      {guess.avatarImageUrl ? (
+                        <img
+                          src={guess.avatarImageUrl}
+                          alt={guess.employeeName}
+                          className={styles.avatarImage}
+                        />
+                      ) : (
+                        <div className={styles.avatarPlaceholder}>{guess.employeeName}</div>
+                      )}
+                    </div>
                     {guess.isCorrect && (
                       <div className={styles.correctBadge} aria-label="Correct guess">
                         ✓
@@ -108,38 +116,20 @@ const GuessList = ({ guesses }: GuessListProps) => {
                   </td>
                   <td className={styles.hintCell}>
                     <FlipBox
-                      label="Seniority"
-                      value={getHintValue(guess, HintType.Seniority)}
-                      result={getHintResult(guess, HintType.Seniority)}
-                      delay={isAnimated ? baseDelay + delayPerBox * 3 : -1}
-                      showArrow={
-                        getHintArrow(guess, HintType.Seniority).show
-                      }
-                      arrowDirection={
-                        getHintArrow(guess, HintType.Seniority).direction
-                      }
-                    />
-                  </td>
-                  <td className={styles.hintCell}>
-                    <FlipBox
                       label="Age"
                       value={getHintValue(guess, HintType.Age)}
                       result={getHintResult(guess, HintType.Age)}
-                      delay={isAnimated ? baseDelay + delayPerBox * 4 : -1}
+                      delay={isAnimated ? baseDelay + delayPerBox * 3 : -1}
                       showArrow={getHintArrow(guess, HintType.Age).show}
                       arrowDirection={getHintArrow(guess, HintType.Age).direction}
                     />
                   </td>
                   <td className={styles.hintCell}>
                     <FlipBox
-                      label="Year Started"
-                      value={getHintValue(guess, HintType.YearStarted)}
-                      result={getHintResult(guess, HintType.YearStarted)}
-                      delay={isAnimated ? baseDelay + delayPerBox * 5 : -1}
-                      showArrow={getHintArrow(guess, HintType.YearStarted).show}
-                      arrowDirection={
-                        getHintArrow(guess, HintType.YearStarted).direction
-                      }
+                      label="Supervisor"
+                      value={getHintValue(guess, HintType.Supervisor)}
+                      result={getHintResult(guess, HintType.Supervisor)}
+                      delay={isAnimated ? baseDelay + delayPerBox * 4 : -1}
                     />
                   </td>
                 </tr>

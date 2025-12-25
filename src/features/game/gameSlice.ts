@@ -71,40 +71,25 @@ const calculateHints = (
     message: skillsMessage,
   });
 
-  // Seniority hint
-  let seniorityResult: HintResult;
-  let seniorityMessage: string;
-
-  if (guessed.seniority === target.seniority) {
-    seniorityResult = HintResult.Equal;
-    seniorityMessage = guessed.seniority.toString();
-  } else if (guessed.seniority > target.seniority) {
-    seniorityResult = HintResult.Higher;
-    seniorityMessage = guessed.seniority.toString();
-  } else {
-    seniorityResult = HintResult.Lower;
-    seniorityMessage = guessed.seniority.toString();
-  }
-
-  hints.push({
-    type: HintType.Seniority,
-    result: seniorityResult,
-    message: seniorityMessage,
-  });
-
   // Age hint
   let ageResult: HintResult;
   let ageMessage: string;
 
-  if (guessed.age === target.age) {
+  const guessedAge = typeof guessed.age === 'number' ? guessed.age : null;
+  const targetAge = typeof target.age === 'number' ? target.age : null;
+
+  if (guessedAge === null || targetAge === null) {
+    ageResult = HintResult.None;
+    ageMessage = typeof guessed.age === 'string' ? guessed.age : '-';
+  } else if (guessedAge === targetAge) {
     ageResult = HintResult.Equal;
-    ageMessage = guessed.age.toString();
-  } else if (guessed.age > target.age) {
+    ageMessage = guessedAge.toString();
+  } else if (guessedAge > targetAge) {
     ageResult = HintResult.Higher;
-    ageMessage = guessed.age.toString();
+    ageMessage = guessedAge.toString();
   } else {
     ageResult = HintResult.Lower;
-    ageMessage = guessed.age.toString();
+    ageMessage = guessedAge.toString();
   }
 
   hints.push({
@@ -113,27 +98,16 @@ const calculateHints = (
     message: ageMessage,
   });
 
-  // Year Started hint
-  let yearStartedResult: HintResult;
-  let yearStartedMessage: string;
-
-  if (guessed.yearStarted === target.yearStarted) {
-    yearStartedResult = HintResult.Equal;
-    yearStartedMessage = guessed.yearStarted.toString();
-  } else if (guessed.yearStarted < target.yearStarted) {
-    // Earlier year = higher (started longer ago)
-    yearStartedResult = HintResult.Higher;
-    yearStartedMessage = guessed.yearStarted.toString();
-  } else {
-    // Later year = lower (started more recently)
-    yearStartedResult = HintResult.Lower;
-    yearStartedMessage = guessed.yearStarted.toString();
-  }
-
+  // Supervisor hint
   hints.push({
-    type: HintType.YearStarted,
-    result: yearStartedResult,
-    message: yearStartedMessage,
+    type: HintType.Supervisor,
+    result:
+      guessed.supervisor && target.supervisor && guessed.supervisor !== '-' && target.supervisor !== '-'
+        ? guessed.supervisor === target.supervisor
+          ? HintResult.Correct
+          : HintResult.Incorrect
+        : HintResult.None,
+    message: guessed.supervisor || '-',
   });
 
   return hints;
@@ -172,6 +146,7 @@ const gameSlice = createSlice({
       const guess: Guess = {
         employeeId: guessed.id,
         employeeName: guessed.name,
+        avatarImageUrl: guessed.avatarImageUrl,
         hints,
         isCorrect,
       };
@@ -180,8 +155,6 @@ const gameSlice = createSlice({
 
       if (isCorrect) {
         state.status = 'won';
-      } else if (state.guesses.length >= state.maxGuesses) {
-        state.status = 'lost';
       }
     },
     resetGame: (state) => {
@@ -209,8 +182,7 @@ export const selectRemainingGuesses = (state: RootState): number =>
   state.game.maxGuesses - state.game.guesses.length;
 
 export const selectCanGuess = (state: RootState): boolean =>
-  state.game.status === 'playing' &&
-  state.game.guesses.length < state.game.maxGuesses;
+  state.game.status === 'playing';
 
 export default gameSlice.reducer;
 

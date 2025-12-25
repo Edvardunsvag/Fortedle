@@ -22,9 +22,8 @@ const Rules = () => {
               <li><strong>Department:</strong> Whether the guessed employee is in the same department</li>
               <li><strong>Office:</strong> Whether they work in the same office location</li>
               <li><strong>Skills:</strong> How many skills match between the guessed and target employee</li>
-              <li><strong>Seniority:</strong> Whether the guessed employee has higher, lower, or equal seniority</li>
               <li><strong>Age:</strong> Whether the guessed employee is older, younger, or the same age</li>
-              <li><strong>Year Started:</strong> Whether the guessed employee started earlier, later, or the same year</li>
+              <li><strong>Supervisor:</strong> Whether the guessed employee has the same supervisor</li>
             </ul>
           </section>
 

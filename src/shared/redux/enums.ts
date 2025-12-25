@@ -3,6 +3,7 @@ export enum FeatureKey {
   Game = 'game',
   Settings = 'settings',
   Navigation = 'navigation',
+  Auth = 'auth',
 }
 
 export enum AsyncStatus {

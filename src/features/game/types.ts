@@ -2,9 +2,8 @@ export enum HintType {
   Department = 'department',
   Office = 'office',
   Skills = 'skills',
-  Seniority = 'seniority',
   Age = 'age',
-  YearStarted = 'yearStarted',
+  Supervisor = 'supervisor',
 }
 
 export enum HintResult {
@@ -26,6 +25,7 @@ export interface GuessHint {
 export interface Guess {
   employeeId: string;
   employeeName: string;
+  avatarImageUrl?: string;
   hints: GuessHint[];
   isCorrect: boolean;
 }

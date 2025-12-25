@@ -5,7 +5,7 @@ import styles from './GuessInput.module.scss';
 interface GuessInputProps {
   value: string;
   onChange: (value: string) => void;
-  onGuess: (employeeName: string) => void;
+  onGuess: (employeeId: string) => void;
   employees: Employee[];
   disabled?: boolean;
 }
@@ -30,9 +30,13 @@ const GuessInput = ({
       return;
     }
 
-    const filtered = employees.filter((emp) =>
-      emp.name.toLowerCase().includes(value.toLowerCase().trim())
-    );
+    const searchTerm = value.toLowerCase().trim();
+    const filtered = employees.filter((emp) => {
+      const nameMatch = emp.name.toLowerCase().includes(searchTerm);
+      const firstNameMatch = emp.firstName.toLowerCase().includes(searchTerm);
+      const surnameMatch = emp.surname.toLowerCase().includes(searchTerm);
+      return nameMatch || firstNameMatch || surnameMatch;
+    });
 
     setSuggestions(filtered.slice(0, 5));
     // Always show suggestions if there are matches (user can still press Enter to select first)
@@ -74,7 +78,7 @@ const GuessInput = ({
       return;
     }
     onChange(employee.name);
-    onGuess(employee.name);
+    onGuess(employee.id);
     setShowSuggestions(false);
     setSelectedIndex(-1);
     inputRef.current?.focus();
@@ -86,7 +90,7 @@ const GuessInput = ({
     );
 
     if (exactMatch) {
-      onGuess(exactMatch.name);
+      onGuess(exactMatch.id);
       onChange('');
     } else {
       // No exact match found - show suggestions if they exist
@@ -96,7 +100,9 @@ const GuessInput = ({
     }
   };
 
-  const handleSuggestionClick = (employee: Employee) => {
+  const handleSuggestionClick = (e: React.MouseEvent<HTMLLIElement>, employee: Employee) => {
+    e.preventDefault();
+    e.stopPropagation();
     handleSelectEmployee(employee);
   };
 
@@ -128,7 +134,12 @@ const GuessInput = ({
               setShowSuggestions(true);
             }
           }}
-          onBlur={() => {
+          onBlur={(e) => {
+            // Don't hide if clicking on a suggestion
+            const relatedTarget = e.relatedTarget as HTMLElement;
+            if (relatedTarget && relatedTarget.closest(`.${styles.suggestions}`)) {
+              return;
+            }
             // Delay to allow click events on suggestions
             setTimeout(() => {
               setShowSuggestions(false);
@@ -149,25 +160,31 @@ const GuessInput = ({
             className={styles.suggestions}
             role="listbox"
           >
-            {suggestions.map((employee, index) => (
-              <li
-                key={employee.id}
-                className={`${styles.suggestion} ${
-                  index === selectedIndex ? styles.selected : ''
-                }`}
-                role="option"
-                aria-selected={index === selectedIndex}
-                onClick={() => handleSuggestionClick(employee)}
-                onKeyDown={(e) => handleSuggestionKeyDown(e, employee)}
-                onMouseDown={(e) => {
-                  // Prevent blur when clicking suggestion
-                  e.preventDefault();
-                }}
-                tabIndex={0}
-              >
-                {employee.name}
-              </li>
-            ))}
+            {suggestions.map((employee, index) => {
+              // Always show firstName + surname in suggestions
+              const displayName = `${employee.firstName} ${employee.surname}`;
+              
+              return (
+                <li
+                  key={employee.id}
+                  className={`${styles.suggestion} ${
+                    index === selectedIndex ? styles.selected : ''
+                  }`}
+                  role="option"
+                  aria-selected={index === selectedIndex}
+                  onClick={(e) => handleSuggestionClick(e, employee)}
+                  onKeyDown={(e) => handleSuggestionKeyDown(e, employee)}
+                  onMouseDown={(e) => {
+                    // Prevent blur when clicking suggestion
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  tabIndex={0}
+                >
+                  {displayName}
+                </li>
+              );
+            })}
           </ul>
         )}
         {value.trim().length > 0 && suggestions.length === 0 && (

@@ -1,17 +1,22 @@
 export interface Employee {
   id: string;
   name: string;
+  firstName: string;
+  surname: string;
+  avatarImageUrl?: string;
   department: string;
   office: string;
   skills: string[];
-  seniority: number; // Higher number = more senior
-  age: number;
-  yearStarted: number; // Year the employee started at the company
+  age: number | string; // Age or '-' if unknown
+  supervisor?: string; // Supervisor name or '-' if unknown
 }
+
+export type DataSource = 'mock' | 'api';
 
 export interface EmployeesState {
   employees: Employee[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
+  dataSource: DataSource;
 }
 

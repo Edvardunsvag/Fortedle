@@ -22,3 +22,10 @@
   }
 }
 
+.settings {
+  position: fixed;
+  top: $spacing-md;
+  right: $spacing-md;
+  z-index: 50;
+}
+

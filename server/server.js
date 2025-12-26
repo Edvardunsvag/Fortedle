@@ -34,7 +34,7 @@ const corsOptions = {
       callback(new Error(`Origin ${origin} not allowed by CORS policy`));
     }
   },
-  credentials: true,
+  credentials: false, // Set to false to match Azure Portal CORS (no credentials checkbox)
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
   exposedHeaders: ['Content-Type'],
@@ -53,7 +53,7 @@ app.options('*', (req, res) => {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With');
-    res.header('Access-Control-Allow-Credentials', 'true');
+    // Don't set Access-Control-Allow-Credentials when credentials: false
     res.header('Access-Control-Max-Age', '86400');
   }
   res.sendStatus(200);

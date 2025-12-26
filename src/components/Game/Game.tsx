@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   loadEmployees,
@@ -21,6 +22,7 @@ import { ShareResults } from './ShareResults';
 import styles from './Game.module.scss';
 
 export const Game = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const employees = useAppSelector(selectEmployees);
   const employeesStatus = useAppSelector(selectEmployeesStatus);
@@ -94,7 +96,7 @@ export const Game = () => {
   if (employeesStatus === 'loading') {
     return (
       <div className={styles.container}>
-        <div className={styles.loading}>Loading employees...</div>
+        <div className={styles.loading}>{t('game.loadingEmployees')}</div>
       </div>
     );
   }
@@ -103,7 +105,7 @@ export const Game = () => {
     return (
       <div className={styles.container}>
         <div className={styles.error}>
-          Failed to load employees. Please refresh the page.
+          {t('game.failedToLoad')}
         </div>
       </div>
     );
@@ -112,7 +114,7 @@ export const Game = () => {
   if (employees.length === 0) {
     return (
       <div className={styles.container}>
-        <div className={styles.empty}>No employees found.</div>
+        <div className={styles.empty}>{t('game.noEmployees')}</div>
       </div>
     );
   }
@@ -120,7 +122,7 @@ export const Game = () => {
   if (!employeeOfTheDayId) {
     return (
       <div className={styles.container}>
-        <div className={styles.loading}>Initializing game...</div>
+        <div className={styles.loading}>{t('game.initializing')}</div>
       </div>
     );
   }
@@ -128,8 +130,8 @@ export const Game = () => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Fortedle</h1>
-        <p className={styles.subtitle}>Guess the employee of the day!</p>
+        <h1 className={styles.title}>{t('game.title')}</h1>
+        <p className={styles.subtitle}>{t('game.subtitle')}</p>
       </header>
 
       <GameStatus

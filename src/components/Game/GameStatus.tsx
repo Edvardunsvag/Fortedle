@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { GameState } from '@/features/game';
 import styles from './GameStatus.module.scss';
 
@@ -7,11 +8,13 @@ interface GameStatusProps {
 }
 
 export const GameStatus = ({ status, guesses }: GameStatusProps) => {
+  const { t } = useTranslation();
+
   if (status === 'won') {
     return (
       <div className={`${styles.status} ${styles.won}`} role="status">
-        <h2>🎉 Congratulations!</h2>
-        <p>You guessed correctly in {guesses.length} attempt{guesses.length !== 1 ? 's' : ''}!</p>
+        <h2>{t('gameStatus.congratulations')}</h2>
+        <p>{t('gameStatus.guessedCorrectly', { count: guesses.length })}</p>
       </div>
     );
   }
@@ -19,8 +22,8 @@ export const GameStatus = ({ status, guesses }: GameStatusProps) => {
   if (status === 'lost') {
     return (
       <div className={`${styles.status} ${styles.lost}`} role="status">
-        <h2>Game Over</h2>
-        <p>You've used all your guesses. Try again tomorrow!</p>
+        <h2>{t('gameStatus.gameOver')}</h2>
+        <p>{t('gameStatus.usedAllGuesses')}</p>
       </div>
     );
   }
@@ -28,7 +31,7 @@ export const GameStatus = ({ status, guesses }: GameStatusProps) => {
   return (
     <div className={styles.status} role="status">
       <p className={styles.guessCount}>
-        Guesses: <strong>{guesses.length}</strong>
+        {t('game.guesses')}: <strong>{guesses.length}</strong>
       </p>
     </div>
   );

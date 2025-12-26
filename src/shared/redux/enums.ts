@@ -4,6 +4,7 @@ export enum FeatureKey {
   Navigation = 'navigation',
   Auth = 'auth',
   Leaderboard = 'leaderboard',
+  I18n = 'i18n',
 }
 
 export enum AsyncStatus {

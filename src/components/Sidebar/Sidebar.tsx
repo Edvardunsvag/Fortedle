@@ -1,9 +1,12 @@
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setActiveTab, selectActiveTab, ActiveTab } from '@/features/navigation';
 import { SidebarItem } from './SidebarItem';
+import { LanguageToggle } from '../LanguageToggle/LanguageToggle';
 import styles from './Sidebar.module.scss';
 
 export const Sidebar = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const activeTab = useAppSelector(selectActiveTab);
 
@@ -24,7 +27,7 @@ export const Sidebar = () => {
         <SidebarItem
           tab={ActiveTab.Play}
           icon="🎮"
-          label="Fortedle"
+          label={t('sidebar.fortedle')}
           activeTab={activeTab}
           onTabClick={handleTabClick}
           onKeyDown={handleKeyDown}
@@ -32,7 +35,7 @@ export const Sidebar = () => {
         <SidebarItem
           tab={ActiveTab.Leaderboard}
           icon="🏆"
-          label="Leaderboard"
+          label={t('sidebar.leaderboard')}
           activeTab={activeTab}
           onTabClick={handleTabClick}
           onKeyDown={handleKeyDown}
@@ -40,7 +43,7 @@ export const Sidebar = () => {
         <SidebarItem
           tab={ActiveTab.Rules}
           icon="📖"
-          label="Rules"
+          label={t('sidebar.rules')}
           activeTab={activeTab}
           onTabClick={handleTabClick}
           onKeyDown={handleKeyDown}
@@ -48,7 +51,7 @@ export const Sidebar = () => {
          <SidebarItem
           tab={ActiveTab.Employees}
           icon="👥"
-          label="Employees"
+          label={t('sidebar.employees')}
           activeTab={activeTab}
           onTabClick={handleTabClick}
           onKeyDown={handleKeyDown}
@@ -56,13 +59,15 @@ export const Sidebar = () => {
         <SidebarItem
           tab={ActiveTab.Sync}
           icon="🔄"
-          label="Sync"
+          label={t('sidebar.sync')}
           activeTab={activeTab}
           onTabClick={handleTabClick}
           onKeyDown={handleKeyDown}
         />
-       
       </ul>
+      <div className={styles.languageToggleContainer}>
+        <LanguageToggle />
+      </div>
     </nav>
   );
 };

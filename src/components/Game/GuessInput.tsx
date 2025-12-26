@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Employee } from '@/features/employees';
 import styles from './GuessInput.module.scss';
 
@@ -17,6 +18,7 @@ export const GuessInput = ({
   employees,
   disabled = false,
 }: GuessInputProps) => {
+  const { t } = useTranslation();
   const [suggestions, setSuggestions] = useState<Employee[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -119,7 +121,7 @@ export const GuessInput = ({
   return (
     <div className={styles.container}>
       <label htmlFor="guess-input" className={styles.label}>
-        Enter employee name:
+        {t('game.enterEmployeeName')}
       </label>
       <div className={styles.inputWrapper}>
         <input
@@ -147,8 +149,8 @@ export const GuessInput = ({
           }}
           disabled={disabled}
           className={styles.input}
-          placeholder="Type employee name..."
-          aria-label="Guess employee name"
+          placeholder={t('game.typeEmployeeName')}
+          aria-label={t('game.enterEmployeeName')}
           aria-autocomplete="list"
           aria-expanded={showSuggestions}
           aria-controls="suggestions-list"
@@ -189,7 +191,7 @@ export const GuessInput = ({
         )}
         {value.trim().length > 0 && suggestions.length === 0 && (
           <div className={styles.noMatch} role="status" aria-live="polite">
-            No employees found matching "{value}"
+            {t('game.noMatch', { value })}
           </div>
         )}
       </div>

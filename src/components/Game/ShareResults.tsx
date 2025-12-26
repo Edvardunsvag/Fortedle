@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { submitScore, selectSubmitStatus, selectSubmitError, clearSubmitStatus } from '@/features/leaderboard';
 import styles from './ShareResults.module.scss';
@@ -9,6 +10,7 @@ interface ShareResultsProps {
 }
 
 export const ShareResults = ({ guesses, isWon }: ShareResultsProps) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const submitStatus = useAppSelector(selectSubmitStatus);
   const submitError = useAppSelector(selectSubmitError);
@@ -70,14 +72,14 @@ export const ShareResults = ({ guesses, isWon }: ShareResultsProps) => {
     <div className={styles.container}>
       <div className={styles.inputGroup}>
         <label htmlFor="user-name" className={styles.label}>
-          Your name:
+          {t('shareResults.yourName')}
         </label>
         <input
           id="user-name"
           type="text"
           value={userName}
           onChange={handleNameChange}
-          placeholder="Enter your name"
+          placeholder={t('shareResults.enterYourName')}
           className={styles.input}
           maxLength={50}
         />
@@ -86,13 +88,13 @@ export const ShareResults = ({ guesses, isWon }: ShareResultsProps) => {
       {isWon && (
         <div className={styles.submitSection}>
           {submitStatus === 'loading' && (
-            <p className={styles.statusMessage}>Submitting score...</p>
+            <p className={styles.statusMessage}>{t('shareResults.submittingScore')}</p>
           )}
           {submitStatus === 'succeeded' && hasSubmitted && (
-            <p className={styles.successMessage}>✓ Score submitted to leaderboard!</p>
+            <p className={styles.successMessage}>{t('shareResults.scoreSubmitted')}</p>
           )}
           {submitStatus === 'failed' && submitError && (
-            <p className={styles.errorMessage}>Failed to submit: {submitError}</p>
+            <p className={styles.errorMessage}>{t('shareResults.failedToSubmit', { error: submitError })}</p>
           )}
         </div>
       )}
@@ -104,9 +106,9 @@ export const ShareResults = ({ guesses, isWon }: ShareResultsProps) => {
               onClick={handleSubmitScore}
               className={styles.submitButton}
               disabled={submitStatus === 'loading' || !userName.trim()}
-              aria-label="Submit score to leaderboard"
+              aria-label={t('shareResults.submit')}
             >
-              {submitStatus === 'loading' ? 'Submitting...' : 'Submit'}
+              {submitStatus === 'loading' ? t('shareResults.submitting') : t('shareResults.submit')}
             </button>
           )}
         </div>

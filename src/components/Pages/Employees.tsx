@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectEmployees, selectEmployeesStatus } from '@/features/employees';
 import type { Employee } from '@/features/employees/types';
 import styles from './Employees.module.scss';
 
 export const Employees = () => {
+  const { t } = useTranslation();
   const employees = useAppSelector(selectEmployees);
   const status = useAppSelector(selectEmployeesStatus);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
@@ -26,7 +28,7 @@ export const Employees = () => {
     return (
       <div className={styles.pageContent}>
         <div className={styles.container}>
-          <p className={styles.loadingText}>Loading employees...</p>
+          <p className={styles.loadingText}>{t('employees.loading')}</p>
         </div>
       </div>
     );
@@ -36,7 +38,7 @@ export const Employees = () => {
     return (
       <div className={styles.pageContent}>
         <div className={styles.container}>
-          <p className={styles.errorText}>Failed to load employees. Please try again later.</p>
+          <p className={styles.errorText}>{t('employees.failedToLoad')}</p>
         </div>
       </div>
     );
@@ -46,7 +48,7 @@ export const Employees = () => {
     return (
       <div className={styles.pageContent}>
         <div className={styles.container}>
-          <p className={styles.emptyText}>No employees found.</p>
+          <p className={styles.emptyText}>{t('employees.noEmployees')}</p>
         </div>
       </div>
     );
@@ -56,7 +58,7 @@ export const Employees = () => {
     <div className={styles.pageContent}>
       <div className={styles.employeesLayout}>
         <div className={styles.employeeList}>
-          <h2 className={styles.listTitle}>Employees</h2>
+          <h2 className={styles.listTitle}>{t('employees.title')}</h2>
           <ul className={styles.list} role="listbox" aria-label="Employee list">
             {employees.map((employee) => (
               <li key={employee.id}>
@@ -94,7 +96,7 @@ export const Employees = () => {
             <EmployeeDetails employee={selectedEmployee} />
           ) : (
             <div className={styles.emptyState}>
-              <p className={styles.emptyStateText}>Select an employee to view details</p>
+              <p className={styles.emptyStateText}>{t('employees.selectEmployee')}</p>
             </div>
           )}
         </div>
@@ -108,6 +110,8 @@ interface EmployeeDetailsProps {
 }
 
 const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.detailsContent}>
       <div className={styles.detailsHeader}>
@@ -127,37 +131,37 @@ const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
       </div>
 
       <div className={styles.detailsSection}>
-        <h3 className={styles.sectionTitle}>Personal Information</h3>
+        <h3 className={styles.sectionTitle}>{t('employees.personalInformation')}</h3>
         <dl className={styles.detailsList}>
           <div className={styles.detailItem}>
-            <dt className={styles.detailLabel}>First Name</dt>
+            <dt className={styles.detailLabel}>{t('employees.firstName')}</dt>
             <dd className={styles.detailValue}>{employee.firstName}</dd>
           </div>
           <div className={styles.detailItem}>
-            <dt className={styles.detailLabel}>Surname</dt>
+            <dt className={styles.detailLabel}>{t('employees.surname')}</dt>
             <dd className={styles.detailValue}>{employee.surname}</dd>
           </div>
           <div className={styles.detailItem}>
-            <dt className={styles.detailLabel}>Age</dt>
+            <dt className={styles.detailLabel}>{t('employees.age')}</dt>
             <dd className={styles.detailValue}>{employee.age}</dd>
           </div>
         </dl>
       </div>
 
       <div className={styles.detailsSection}>
-        <h3 className={styles.sectionTitle}>Work Information</h3>
+        <h3 className={styles.sectionTitle}>{t('employees.workInformation')}</h3>
         <dl className={styles.detailsList}>
           <div className={styles.detailItem}>
-            <dt className={styles.detailLabel}>Department</dt>
+            <dt className={styles.detailLabel}>{t('employees.department')}</dt>
             <dd className={styles.detailValue}>{employee.department}</dd>
           </div>
           <div className={styles.detailItem}>
-            <dt className={styles.detailLabel}>Office</dt>
+            <dt className={styles.detailLabel}>{t('employees.office')}</dt>
             <dd className={styles.detailValue}>{employee.office}</dd>
           </div>
           {employee.supervisor && (
             <div className={styles.detailItem}>
-              <dt className={styles.detailLabel}>Supervisor</dt>
+              <dt className={styles.detailLabel}>{t('employees.supervisor')}</dt>
               <dd className={styles.detailValue}>{employee.supervisor}</dd>
             </div>
           )}
@@ -166,7 +170,7 @@ const EmployeeDetails = ({ employee }: EmployeeDetailsProps) => {
 
       {employee.teams && employee.teams.length > 0 && (
         <div className={styles.detailsSection}>
-          <h3 className={styles.sectionTitle}>Teams</h3>
+          <h3 className={styles.sectionTitle}>{t('employees.teams')}</h3>
           <ul className={styles.teamsList}>
             {employee.teams.map((team, index) => (
               <li key={index} className={styles.teamItem}>

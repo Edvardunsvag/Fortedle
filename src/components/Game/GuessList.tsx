@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Guess } from '@/features/game';
 import { HintType, HintResult } from '@/features/game';
 import { FlipBox } from './FlipBox';
@@ -9,6 +10,7 @@ interface GuessListProps {
 }
 
 export const GuessList = ({ guesses }: GuessListProps) => {
+  const { t } = useTranslation();
   const [animatedGuesses, setAnimatedGuesses] = useState<Set<number>>(new Set());
   const previousLengthRef = useRef<number>(0);
 
@@ -56,12 +58,12 @@ export const GuessList = ({ guesses }: GuessListProps) => {
         <table className={styles.guessTable}>
           <thead>
             <tr>
-              <th className={styles.headerCell}>Employee</th>
-              <th className={styles.headerCell}>Department</th>
-              <th className={styles.headerCell}>Office</th>
-              <th className={styles.headerCell}>Teams</th>
-              <th className={styles.headerCell}>Age</th>
-              <th className={styles.headerCell}>Supervisor</th>
+              <th className={styles.headerCell}>{t('guessList.employee')}</th>
+              <th className={styles.headerCell}>{t('guessList.department')}</th>
+              <th className={styles.headerCell}>{t('guessList.office')}</th>
+              <th className={styles.headerCell}>{t('guessList.teams')}</th>
+              <th className={styles.headerCell}>{t('guessList.age')}</th>
+              <th className={styles.headerCell}>{t('guessList.supervisor')}</th>
             </tr>
           </thead>
           <tbody>
@@ -92,7 +94,7 @@ export const GuessList = ({ guesses }: GuessListProps) => {
                   </td>
                   <td className={styles.hintCell}>
                     <FlipBox
-                      label="Department"
+                      label={t('guessList.department')}
                       value={getHintValue(guess, HintType.Department)}
                       result={getHintResult(guess, HintType.Department)}
                       delay={isAnimated ? baseDelay + delayPerBox * 0 : -1}
@@ -100,7 +102,7 @@ export const GuessList = ({ guesses }: GuessListProps) => {
                   </td>
                   <td className={styles.hintCell}>
                     <FlipBox
-                      label="Office"
+                      label={t('guessList.office')}
                       value={getHintValue(guess, HintType.Office)}
                       result={getHintResult(guess, HintType.Office)}
                       delay={isAnimated ? baseDelay + delayPerBox * 1 : -1}
@@ -108,7 +110,7 @@ export const GuessList = ({ guesses }: GuessListProps) => {
                   </td>
                   <td className={styles.hintCell}>
                     <FlipBox
-                      label="Teams"
+                      label={t('guessList.teams')}
                       value={getHintValue(guess, HintType.Teams)}
                       result={getHintResult(guess, HintType.Teams)}
                       delay={isAnimated ? baseDelay + delayPerBox * 2 : -1}
@@ -116,7 +118,7 @@ export const GuessList = ({ guesses }: GuessListProps) => {
                   </td>
                   <td className={styles.hintCell}>
                     <FlipBox
-                      label="Age"
+                      label={t('guessList.age')}
                       value={getHintValue(guess, HintType.Age)}
                       result={getHintResult(guess, HintType.Age)}
                       delay={isAnimated ? baseDelay + delayPerBox * 3 : -1}
@@ -126,7 +128,7 @@ export const GuessList = ({ guesses }: GuessListProps) => {
                   </td>
                   <td className={styles.hintCell}>
                     <FlipBox
-                      label="Supervisor"
+                      label={t('guessList.supervisor')}
                       value={getHintValue(guess, HintType.Supervisor)}
                       result={getHintResult(guess, HintType.Supervisor)}
                       delay={isAnimated ? baseDelay + delayPerBox * 4 : -1}

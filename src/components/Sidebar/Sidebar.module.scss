@@ -67,6 +67,13 @@
   flex: 1;
 }
 
+.languageToggleContainer {
+  position: absolute;
+  bottom: $spacing-xl;
+  left: $spacing-lg;
+  right: $spacing-lg;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     width: 4rem;
@@ -80,6 +87,11 @@
 
   .label {
     display: none;
+  }
+
+  .languageToggleContainer {
+    left: $spacing-md;
+    right: $spacing-md;
   }
 }
 

@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { syncEmployeesData, selectEmployeesStatus } from '@/features/employees';
 import styles from './Pages.module.scss';
 
 export const Sync = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const employeesStatus = useAppSelector(selectEmployeesStatus);
   const [tokenInput, setTokenInput] = useState('');
@@ -17,7 +19,7 @@ export const Sync = () => {
     setSyncSuccess(false);
 
     if (!tokenInput.trim()) {
-      setError('Please enter an access token');
+      setError(t('sync.pleaseEnterToken'));
       return;
     }
 
@@ -28,10 +30,10 @@ export const Sync = () => {
         setSyncSuccess(true);
         setTokenInput('');
       } else if (syncEmployeesData.rejected.match(result)) {
-        setError(result.payload as string || 'Failed to sync data');
+        setError(result.payload as string || t('sync.failedToSync'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to sync data. Please try again.');
+      setError(err instanceof Error ? err.message : t('sync.failedToSync'));
     }
   };
 
@@ -48,14 +50,14 @@ export const Sync = () => {
   return (
     <div className={styles.pageContent}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Data Sync</h1>
+        <h1 className={styles.title}>{t('sync.title')}</h1>
         <p className={styles.subtitle}>
-          Enter your Huma access token to sync employee data to the database.
+          {t('sync.subtitle')}
         </p>
         
         <form onSubmit={handleSync} className={styles.tokenForm}>
           <label htmlFor="token-input" className={styles.tokenLabel}>
-            Access Token
+            {t('sync.accessToken')}
           </label>
           <textarea
             id="token-input"
@@ -63,14 +65,14 @@ export const Sync = () => {
             value={tokenInput}
             onChange={(e) => setTokenInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Paste your Huma access token here (Ctrl+V or Cmd+V)..."
+            placeholder={t('sync.tokenPlaceholder')}
             rows={4}
             disabled={isSyncing}
           />
           {error && <p className={styles.error}>{error}</p>}
           {syncSuccess && (
             <p className={styles.success}>
-              Data synced successfully! {employeesStatus === 'succeeded' && 'Employees have been loaded.'}
+              {t('sync.dataSynced')} {employeesStatus === 'succeeded' && t('sync.employeesLoaded')}
             </p>
           )}
           <div className={styles.tokenActions}>
@@ -79,21 +81,21 @@ export const Sync = () => {
               type="submit"
               disabled={isSyncing || !tokenInput.trim()}
             >
-              {isSyncing ? 'Syncing...' : 'Sync Data'}
+              {isSyncing ? t('sync.syncing') : t('sync.syncData')}
             </button>
           </div>
           <p className={styles.instructions}>
-            <strong>How to get your token:</strong>
+            <strong>{t('sync.howToGetToken')}</strong>
             <br />
-            1. Open Developer Tools (F12)
+            {t('sync.step1')}
             <br />
-            2. Go to Application → Local Storage → https://fortedigital.humahr.com
+            {t('sync.step2')}
             <br />
-            3. Find the key <code>huma:accessToken</code>
+            {t('sync.step3')}
             <br />
-            4. Copy the value (it may be in array format like <code>["token"]</code>)
+            {t('sync.step4')}
             <br />
-            5. Paste it here and click "Sync Data"
+            {t('sync.step5')}
           </p>
         </form>
       </div>

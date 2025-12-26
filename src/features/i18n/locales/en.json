@@ -1,0 +1,126 @@
+{
+  "sidebar": {
+    "fortedle": "Fortedle",
+    "leaderboard": "Leaderboard",
+    "rules": "Rules",
+    "employees": "Employees",
+    "sync": "Sync"
+  },
+  "game": {
+    "title": "Fortedle",
+    "subtitle": "Guess the employee of the day!",
+    "loadingEmployees": "Loading employees...",
+    "failedToLoad": "Failed to load employees. Please refresh the page.",
+    "noEmployees": "No employees found.",
+    "initializing": "Initializing game...",
+    "enterEmployeeName": "Enter employee name:",
+    "typeEmployeeName": "Type employee name...",
+    "noMatch": "No employees found matching \"{{value}}\"",
+    "guesses": "Guesses",
+    "guess": "guess",
+    "guesses_plural": "guesses"
+  },
+  "gameStatus": {
+    "congratulations": "🎉 Congratulations!",
+    "guessedCorrectly": "You guessed correctly in {{count}} attempt!",
+    "guessedCorrectly_plural": "You guessed correctly in {{count}} attempts!",
+    "gameOver": "Game Over",
+    "usedAllGuesses": "You've used all your guesses. Try again tomorrow!"
+  },
+  "shareResults": {
+    "yourName": "Your name:",
+    "enterYourName": "Enter your name",
+    "submittingScore": "Submitting score...",
+    "scoreSubmitted": "✓ Score submitted to leaderboard!",
+    "failedToSubmit": "Failed to submit: {{error}}",
+    "submitting": "Submitting...",
+    "submit": "Submit"
+  },
+  "rules": {
+    "title": "Rules",
+    "howToPlay": "How to Play",
+    "howToPlayDescription": "Guess the employee of the day! You have infinite attempts to figure out who the selected employee is.",
+    "hints": "Hints",
+    "hintsDescription": "After each guess, you'll receive hints about:",
+    "department": "Department",
+    "departmentDescription": "Whether the guessed employee is in the same department",
+    "office": "Office",
+    "officeDescription": "Whether they work in the same office location",
+    "teams": "Teams",
+    "teamsDescription": "Whether the guessed employee is on the same teams as the target employee",
+    "age": "Age",
+    "ageDescription": "Whether the guessed employee is older, younger, or the same age",
+    "supervisor": "Supervisor",
+    "supervisorDescription": "Whether the guessed employee has the same supervisor",
+    "colorLegend": "Color Legend",
+    "winning": "Winning",
+    "winningDescription": "Win by correctly guessing the employee. The employee of the day changes daily, so come back tomorrow for a new challenge!"
+  },
+  "colorLegend": {
+    "correct": "Correct",
+    "partial": "Partial",
+    "incorrect": "Incorrect",
+    "higher": "Higher",
+    "lower": "Lower"
+  },
+  "guessList": {
+    "employee": "Employee",
+    "department": "Department",
+    "office": "Office",
+    "teams": "Teams",
+    "age": "Age",
+    "supervisor": "Supervisor"
+  },
+  "hintDisplay": {
+    "department": "Department",
+    "office": "Office",
+    "teams": "Teams",
+    "age": "Age",
+    "supervisor": "Supervisor"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "loading": "Loading...",
+    "failedToLoad": "Failed to load leaderboard",
+    "retry": "Retry",
+    "rank": "Rank",
+    "name": "Name",
+    "score": "Score",
+    "noScores": "No scores yet for today. Be the first to complete the challenge!"
+  },
+  "sync": {
+    "title": "Data Sync",
+    "subtitle": "Enter your Huma access token to sync employee data to the database.",
+    "accessToken": "Access Token",
+    "tokenPlaceholder": "Paste your Huma access token here (Ctrl+V or Cmd+V)...",
+    "pleaseEnterToken": "Please enter an access token",
+    "failedToSync": "Failed to sync data",
+    "dataSynced": "Data synced successfully!",
+    "employeesLoaded": "Employees have been loaded.",
+    "syncing": "Syncing...",
+    "syncData": "Sync Data",
+    "howToGetToken": "How to get your token:",
+    "step1": "1. Open Developer Tools (F12)",
+    "step2": "2. Go to Application → Local Storage → https://fortedigital.humahr.com",
+    "step3": "3. Find the key <code>huma:accessToken</code>",
+    "step4": "4. Copy the value (it may be in array format like <code>[\"token\"]</code>)",
+    "step5": "5. Paste it here and click \"Sync Data\""
+  },
+  "employees": {
+    "title": "Employees",
+    "loading": "Loading employees...",
+    "failedToLoad": "Failed to load employees. Please try again later.",
+    "noEmployees": "No employees found.",
+    "selectEmployee": "Select an employee to view details",
+    "personalInformation": "Personal Information",
+    "workInformation": "Work Information",
+    "teams": "Teams",
+    "firstName": "First Name",
+    "surname": "Surname",
+    "age": "Age",
+    "department": "Department",
+    "office": "Office",
+    "supervisor": "Supervisor"
+  }
+}
+

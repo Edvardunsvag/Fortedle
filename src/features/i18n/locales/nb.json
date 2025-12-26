@@ -1,0 +1,126 @@
+{
+  "sidebar": {
+    "fortedle": "Fortedle",
+    "leaderboard": "Toppliste",
+    "rules": "Regler",
+    "employees": "Ansatte",
+    "sync": "Synkroniser"
+  },
+  "game": {
+    "title": "Fortedle",
+    "subtitle": "Gjett dagens ansatt!",
+    "loadingEmployees": "Laster ansatte...",
+    "failedToLoad": "Kunne ikke laste ansatte. Vennligst oppdater siden.",
+    "noEmployees": "Ingen ansatte funnet.",
+    "initializing": "Initialiserer spill...",
+    "enterEmployeeName": "Skriv inn ansattnavn:",
+    "typeEmployeeName": "Skriv ansattnavn...",
+    "noMatch": "Ingen ansatte funnet som matcher \"{{value}}\"",
+    "guesses": "Gjetninger",
+    "guess": "gjetning",
+    "guesses_plural": "gjetninger"
+  },
+  "gameStatus": {
+    "congratulations": "🎉 Gratulerer!",
+    "guessedCorrectly": "Du gjettet riktig på {{count}} forsøk!",
+    "guessedCorrectly_plural": "Du gjettet riktig på {{count}} forsøk!",
+    "gameOver": "Spill over",
+    "usedAllGuesses": "Du har brukt alle gjetningene dine. Prøv igjen i morgen!"
+  },
+  "shareResults": {
+    "yourName": "Ditt navn:",
+    "enterYourName": "Skriv inn ditt navn",
+    "submittingScore": "Sender inn poengsum...",
+    "scoreSubmitted": "✓ Poengsum sendt inn til topplisten!",
+    "failedToSubmit": "Kunne ikke sende inn: {{error}}",
+    "submitting": "Sender inn...",
+    "submit": "Send inn"
+  },
+  "rules": {
+    "title": "Regler",
+    "howToPlay": "Hvordan spille",
+    "howToPlayDescription": "Gjett dagens ansatt! Du har uendelig antall forsøk på å finne ut hvem den valgte ansatten er.",
+    "hints": "Hint",
+    "hintsDescription": "Etter hver gjetning får du hint om:",
+    "department": "Avdeling",
+    "departmentDescription": "Om den gjettede ansatten er i samme avdeling",
+    "office": "Kontor",
+    "officeDescription": "Om de jobber på samme kontorsted",
+    "teams": "Team",
+    "teamsDescription": "Om den gjettede ansatten er på samme team som målansatten",
+    "age": "Alder",
+    "ageDescription": "Om den gjettede ansatten er eldre, yngre eller samme alder",
+    "supervisor": "Leder",
+    "supervisorDescription": "Om den gjettede ansatten har samme leder",
+    "colorLegend": "Fargeforklaring",
+    "winning": "Vinner",
+    "winningDescription": "Vinn ved å gjette riktig ansatt. Dagens ansatt endres daglig, så kom tilbake i morgen for en ny utfordring!"
+  },
+  "colorLegend": {
+    "correct": "Riktig",
+    "partial": "Delvis",
+    "incorrect": "Feil",
+    "higher": "Høyere",
+    "lower": "Lavere"
+  },
+  "guessList": {
+    "employee": "Ansatt",
+    "department": "Avdeling",
+    "office": "Kontor",
+    "teams": "Team",
+    "age": "Alder",
+    "supervisor": "Leder"
+  },
+  "hintDisplay": {
+    "department": "Avdeling",
+    "office": "Kontor",
+    "teams": "Team",
+    "age": "Alder",
+    "supervisor": "Leder"
+  },
+  "leaderboard": {
+    "title": "Toppliste",
+    "loading": "Laster...",
+    "failedToLoad": "Kunne ikke laste toppliste",
+    "retry": "Prøv igjen",
+    "rank": "Plassering",
+    "name": "Navn",
+    "score": "Poengsum",
+    "noScores": "Ingen poengsummer ennå i dag. Vær den første til å fullføre utfordringen!"
+  },
+  "sync": {
+    "title": "Datasynkronisering",
+    "subtitle": "Skriv inn din Huma tilgangstoken for å synkronisere ansattdata til databasen.",
+    "accessToken": "Tilgangstoken",
+    "tokenPlaceholder": "Lim inn din Huma tilgangstoken her (Ctrl+V eller Cmd+V)...",
+    "pleaseEnterToken": "Vennligst skriv inn en tilgangstoken",
+    "failedToSync": "Kunne ikke synkronisere data",
+    "dataSynced": "Data synkronisert!",
+    "employeesLoaded": "Ansatte har blitt lastet.",
+    "syncing": "Synkroniserer...",
+    "syncData": "Synkroniser data",
+    "howToGetToken": "Hvordan få din token:",
+    "step1": "1. Åpne Utviklerverktøy (F12)",
+    "step2": "2. Gå til Application → Local Storage → https://fortedigital.humahr.com",
+    "step3": "3. Finn nøkkelen <code>huma:accessToken</code>",
+    "step4": "4. Kopier verdien (den kan være i array-format som <code>[\"token\"]</code>)",
+    "step5": "5. Lim den inn her og klikk \"Synkroniser data\""
+  },
+  "employees": {
+    "title": "Ansatte",
+    "loading": "Laster ansatte...",
+    "failedToLoad": "Kunne ikke laste ansatte. Vennligst prøv igjen senere.",
+    "noEmployees": "Ingen ansatte funnet.",
+    "selectEmployee": "Velg en ansatt for å se detaljer",
+    "personalInformation": "Personlig informasjon",
+    "workInformation": "Arbeidsinformasjon",
+    "teams": "Team",
+    "firstName": "Fornavn",
+    "surname": "Etternavn",
+    "age": "Alder",
+    "department": "Avdeling",
+    "office": "Kontor",
+    "supervisor": "Leder"
+  }
+}
+

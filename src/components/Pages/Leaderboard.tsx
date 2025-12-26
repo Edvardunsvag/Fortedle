@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   fetchLeaderboard,
@@ -10,6 +11,7 @@ import {
 import styles from './Pages.module.scss';
 
 export const Leaderboard = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const leaderboard = useAppSelector(selectLeaderboard);
   const status = useAppSelector(selectLeaderboardStatus);
@@ -34,7 +36,9 @@ export const Leaderboard = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    const language = localStorage.getItem('fortedle_language') || 'en';
+    const locale = language === 'nb' ? 'nb-NO' : 'en-US';
+    return date.toLocaleDateString(locale, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -46,8 +50,8 @@ export const Leaderboard = () => {
     return (
       <div className={styles.page}>
         <div className={styles.container}>
-          <h1 className={styles.title}>Leaderboard</h1>
-          <p className={styles.subtitle}>Loading...</p>
+          <h1 className={styles.title}>{t('leaderboard.title')}</h1>
+          <p className={styles.subtitle}>{t('leaderboard.loading')}</p>
         </div>
       </div>
     );
@@ -57,9 +61,9 @@ export const Leaderboard = () => {
     return (
       <div className={styles.page}>
         <div className={styles.container}>
-          <h1 className={styles.title}>Leaderboard</h1>
+          <h1 className={styles.title}>{t('leaderboard.title')}</h1>
           <p className={styles.subtitle} style={{ color: 'var(--color-error)' }}>
-            {error || 'Failed to load leaderboard'}
+            {error || t('leaderboard.failedToLoad')}
           </p>
           <button
             onClick={handleRefresh}
@@ -73,19 +77,19 @@ export const Leaderboard = () => {
               cursor: 'pointer',
             }}
           >
-            Retry
+            {t('leaderboard.retry')}
           </button>
         </div>
       </div>
     );
   }
 
-  const today = leaderboard?.date ? formatDate(leaderboard.date) : 'Today';
+  const today = leaderboard?.date ? formatDate(leaderboard.date) : t('leaderboard.title');
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Leaderboard</h1>
+        <h1 className={styles.title}>{t('leaderboard.title')}</h1>
         <p className={styles.subtitle}>{today}</p>
 
         {leaderboard && leaderboard.leaderboard.length > 0 ? (
@@ -111,7 +115,7 @@ export const Leaderboard = () => {
                       color: 'var(--color-dark-fill)',
                     }}
                   >
-                    Rank
+                    {t('leaderboard.rank')}
                   </th>
                   <th
                     style={{
@@ -121,7 +125,7 @@ export const Leaderboard = () => {
                       color: 'var(--color-dark-fill)',
                     }}
                   >
-                    Name
+                    {t('leaderboard.name')}
                   </th>
                   <th
                     style={{
@@ -131,7 +135,7 @@ export const Leaderboard = () => {
                       color: 'var(--color-dark-fill)',
                     }}
                   >
-                    Score
+                    {t('leaderboard.score')}
                   </th>
                 </tr>
               </thead>
@@ -171,7 +175,7 @@ export const Leaderboard = () => {
                         fontWeight: entry.rank <= 3 ? 600 : 400,
                       }}
                     >
-                      {entry.score} {entry.score === 1 ? 'guess' : 'guesses'}
+                      {entry.score} {entry.score === 1 ? t('game.guess') : t('game.guesses_plural')}
                     </td>
                   </tr>
                 ))}
@@ -181,7 +185,7 @@ export const Leaderboard = () => {
         ) : (
           <div className={styles.content}>
             <p className={styles.text}>
-              No scores yet for today. Be the first to complete the challenge!
+              {t('leaderboard.noScores')}
             </p>
           </div>
         )}

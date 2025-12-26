@@ -9,12 +9,16 @@ import { Employees } from './components/Pages/Employees';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { loadEmployees, selectEmployees, selectEmployeesStatus } from './features/employees';
 import { ActiveTab, selectActiveTab } from './features/navigation';
+import { useI18nSync } from './features/i18n/useI18nSync';
 
 export const App = () => {
   const dispatch = useAppDispatch();
   const activeTab = useAppSelector(selectActiveTab);
   const employees = useAppSelector(selectEmployees);
   const employeesStatus = useAppSelector(selectEmployeesStatus);
+  
+  // Sync i18n with Redux language state
+  useI18nSync();
 
   useEffect(() => {
     // Try to load employees from database on mount only

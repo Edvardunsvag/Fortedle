@@ -13,6 +13,7 @@ import { ActiveTab, selectActiveTab } from './features/navigation';
 import { useI18nSync } from './features/i18n/useI18nSync';
 import { useMsalAuth } from './features/auth/useMsalAuth';
 import { selectIsAuthenticated } from './features/auth';
+import { AsyncStatus } from './shared/redux/enums';
 
 export const App = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +32,7 @@ export const App = () => {
     // Try to load employees from database on mount only
     // Only load if status is 'idle' (initial state) and we haven't loaded yet
     // Only load if authenticated
-    if (isAuthenticated && employeesStatus === 'idle' && employees.length === 0) {
+    if (isAuthenticated && employeesStatus === AsyncStatus.Idle && employees.length === 0) {
       dispatch(loadEmployees());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -3,10 +3,11 @@ import { createAppAsyncThunk } from '@/app/createAppAsyncThunk';
 import { fetchEmployees, syncEmployees } from './api';
 import type { Employee, EmployeesState } from './types';
 import type { RootState } from '@/app/store';
+import { AsyncStatus } from '@/shared/redux/enums';
 
 const initialState: EmployeesState = {
   employees: [],
-  status: 'idle',
+  status: AsyncStatus.Idle,
   error: null,
 };
 
@@ -49,26 +50,26 @@ const employeesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loadEmployees.pending, (state) => {
-        state.status = 'loading';
+        state.status = AsyncStatus.Loading;
         state.error = null;
       })
       .addCase(loadEmployees.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = AsyncStatus.Succeeded;
         state.employees = action.payload.employees;
       })
       .addCase(loadEmployees.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = AsyncStatus.Failed;
         state.error = action.payload || 'Failed to load employees';
       })
       .addCase(syncEmployeesData.pending, (state) => {
-        state.status = 'loading';
+        state.status = AsyncStatus.Loading;
         state.error = null;
       })
       .addCase(syncEmployeesData.fulfilled, (_state) => {
         // Status will be updated by loadEmployees that runs after sync
       })
       .addCase(syncEmployeesData.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = AsyncStatus.Failed;
         state.error = action.payload || 'Failed to sync employees';
       });
   },

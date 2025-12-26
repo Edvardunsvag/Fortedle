@@ -1,3 +1,5 @@
+import { AsyncStatus } from '@/shared/redux/enums';
+
 export interface Employee {
   id: string;
   name: string;
@@ -13,7 +15,7 @@ export interface Employee {
 
 export interface EmployeesState {
   employees: Employee[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: AsyncStatus;
   error: string | null;
 }
 

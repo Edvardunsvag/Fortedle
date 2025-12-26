@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { syncEmployeesData, selectEmployeesStatus, selectEmployees } from '@/features/employees';
+import { AsyncStatus } from '@/shared/redux/enums';
 import styles from './Pages.module.scss';
 
 export const Sync = () => {
@@ -13,7 +14,7 @@ export const Sync = () => {
   const [error, setError] = useState<string | null>(null);
   const [syncSuccess, setSyncSuccess] = useState(false);
   const [alreadySynced, setAlreadySynced] = useState(false);
-  const isSyncing = employeesStatus === 'loading';
+  const isSyncing = employeesStatus === AsyncStatus.Loading;
   const hasEmployees = employees.length > 0;
 
   const handleSync = async (e: React.FormEvent) => {
@@ -94,7 +95,7 @@ export const Sync = () => {
             )}
             {syncSuccess && (
               <p className={styles.success}>
-                {t('sync.dataSynced')} {employeesStatus === 'succeeded' && t('sync.employeesLoaded')}
+                {t('sync.dataSynced')} {employeesStatus === AsyncStatus.Succeeded && t('sync.employeesLoaded')}
               </p>
             )}
             <div className={styles.tokenActions}>

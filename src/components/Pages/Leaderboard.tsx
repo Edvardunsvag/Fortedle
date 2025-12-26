@@ -8,6 +8,7 @@ import {
   selectLeaderboardError,
   selectSubmitStatus,
 } from '@/features/leaderboard';
+import { AsyncStatus } from '@/shared/redux/enums';
 import styles from './Pages.module.scss';
 
 export const Leaderboard = () => {
@@ -25,7 +26,7 @@ export const Leaderboard = () => {
 
   // Refresh leaderboard when a score is successfully submitted
   useEffect(() => {
-    if (submitStatus === 'succeeded') {
+    if (submitStatus === AsyncStatus.Succeeded) {
       dispatch(fetchLeaderboard());
     }
   }, [dispatch, submitStatus]);
@@ -46,7 +47,7 @@ export const Leaderboard = () => {
     });
   };
 
-  if (status === 'loading') {
+  if (status === AsyncStatus.Loading) {
     return (
       <div className={styles.page}>
         <div className={styles.container}>
@@ -57,7 +58,7 @@ export const Leaderboard = () => {
     );
   }
 
-  if (status === 'failed') {
+  if (status === AsyncStatus.Failed) {
     return (
       <div className={styles.page}>
         <div className={styles.container}>

@@ -1,70 +1,39 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createAppAsyncThunk } from '@/app/createAppAsyncThunk';
 import type { RootState } from '@/app/store';
-import { getApiUrl } from '@/shared/utils/apiConfig';
-
-export interface LeaderboardEntry {
-  rank: number;
-  name: string;
-  score: number;
-  avatarImageUrl: string | null;
-  submittedAt: string;
-}
-
-export interface LeaderboardData {
-  date: string;
-  leaderboard: LeaderboardEntry[];
-}
-
-interface LeaderboardState {
-  data: LeaderboardData | null;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | null;
-  submitStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
-  submitError: string | null;
-}
+import { AsyncStatus } from '@/shared/redux/enums';
+import { fetchLeaderboard as fetchLeaderboardApi, submitScore as submitScoreApi } from './api';
+import type { LeaderboardState } from './types';
 
 const initialState: LeaderboardState = {
   data: null,
-  status: 'idle',
+  status: AsyncStatus.Idle,
   error: null,
-  submitStatus: 'idle',
+  submitStatus: AsyncStatus.Idle,
   submitError: null,
 };
 
 export const fetchLeaderboard = createAppAsyncThunk(
   'leaderboard/fetchLeaderboard',
-  async (date?: string) => {
-    const url = date ? getApiUrl('/api/leaderboard') + `?date=${date}` : getApiUrl('/api/leaderboard');
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      throw new Error(`Failed to fetch leaderboard: ${response.status}`);
+  async (date?: string, { rejectWithValue }) => {
+    try {
+      return await fetchLeaderboardApi(date);
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Failed to fetch leaderboard'
+      );
     }
-    
-    return await response.json() as LeaderboardData;
   }
 );
 
 export const submitScore = createAppAsyncThunk(
   'leaderboard/submitScore',
-  async ({ name, score, avatarImageUrl }: { name: string; score: number; avatarImageUrl?: string }, { rejectWithValue }) => {
+  async (
+    { name, score, avatarImageUrl }: { name: string; score: number; avatarImageUrl?: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await fetch(getApiUrl('/api/leaderboard'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, score, avatarImageUrl }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit score');
-      }
-
-      const result = await response.json();
-      return result.result;
+      return await submitScoreApi({ name, score, avatarImageUrl });
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : 'Failed to submit score'
@@ -78,7 +47,7 @@ const leaderboardSlice = createSlice({
   initialState,
   reducers: {
     clearSubmitStatus: (state) => {
-      state.submitStatus = 'idle';
+      state.submitStatus = AsyncStatus.Idle;
       state.submitError = null;
     },
   },
@@ -86,37 +55,37 @@ const leaderboardSlice = createSlice({
     builder
       // Fetch leaderboard
       .addCase(fetchLeaderboard.pending, (state) => {
-        state.status = 'loading';
+        state.status = AsyncStatus.Loading;
         state.error = null;
       })
       .addCase(fetchLeaderboard.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = AsyncStatus.Succeeded;
         state.data = action.payload;
       })
       .addCase(fetchLeaderboard.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload as string || 'Failed to fetch leaderboard';
+        state.status = AsyncStatus.Failed;
+        state.error = action.payload || 'Failed to fetch leaderboard';
       })
       // Submit score
       .addCase(submitScore.pending, (state) => {
-        state.submitStatus = 'loading';
+        state.submitStatus = AsyncStatus.Loading;
         state.submitError = null;
       })
       .addCase(submitScore.fulfilled, (state) => {
-        state.submitStatus = 'succeeded';
+        state.submitStatus = AsyncStatus.Succeeded;
         // Refresh leaderboard after successful submission
-        state.status = 'idle';
+        state.status = AsyncStatus.Idle;
       })
       .addCase(submitScore.rejected, (state, action) => {
-        state.submitStatus = 'failed';
-        state.submitError = action.payload as string || 'Failed to submit score';
+        state.submitStatus = AsyncStatus.Failed;
+        state.submitError = action.payload || 'Failed to submit score';
       });
   },
 });
 
 export const { clearSubmitStatus } = leaderboardSlice.actions;
 
-export const selectLeaderboard = (state: RootState): LeaderboardData | null =>
+export const selectLeaderboard = (state: RootState): LeaderboardState['data'] =>
   state.leaderboard.data;
 
 export const selectLeaderboardStatus = (state: RootState): LeaderboardState['status'] =>
@@ -132,4 +101,3 @@ export const selectSubmitError = (state: RootState): string | null =>
   state.leaderboard.submitError;
 
 export const leaderboardReducer = leaderboardSlice.reducer;
-

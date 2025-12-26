@@ -1,13 +1,10 @@
-export { leaderboardReducer } from './leaderboardSlice';
+export { leaderboardReducer, fetchLeaderboard, submitScore, clearSubmitStatus } from './leaderboardSlice';
 export {
-  fetchLeaderboard,
-  submitScore,
-  clearSubmitStatus,
   selectLeaderboard,
   selectLeaderboardStatus,
   selectLeaderboardError,
   selectSubmitStatus,
   selectSubmitError,
 } from './leaderboardSlice';
-export type { LeaderboardEntry, LeaderboardData } from './leaderboardSlice';
+export type { LeaderboardEntry, LeaderboardData, LeaderboardState } from './types';
 

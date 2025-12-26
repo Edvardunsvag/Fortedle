@@ -16,6 +16,7 @@ import {
 } from '@/features/game';
 import { selectAccount } from '@/features/auth';
 import { submitScore } from '@/features/leaderboard';
+import { AsyncStatus } from '@/shared/redux/enums';
 import { getTodayDateString, getDateSeed, selectIndexBySeed } from '@/shared/utils/dateUtils';
 import { findMatchingEmployee } from '@/shared/utils/nameMatcher';
 import { GuessInput } from './GuessInput';
@@ -39,14 +40,14 @@ export const Game = () => {
 
   // Load employees on mount only if status is idle
   useEffect(() => {
-    if (employeesStatus === 'idle' && employees.length === 0) {
+    if (employeesStatus === AsyncStatus.Idle && employees.length === 0) {
       dispatch(loadEmployees());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount
 
   useEffect(() => {
-    if (employeesStatus === 'succeeded' && employees.length > 0) {
+    if (employeesStatus === AsyncStatus.Succeeded && employees.length > 0) {
       const today = getTodayDateString();
       
       // Check if we need to initialize or re-initialize
@@ -131,7 +132,7 @@ export const Game = () => {
     setInputValue('');
   };
 
-  if (employeesStatus === 'loading') {
+  if (employeesStatus === AsyncStatus.Loading) {
     return (
       <div className={styles.container}>
         <div className={styles.loading}>{t('game.loadingEmployees')}</div>
@@ -139,7 +140,7 @@ export const Game = () => {
     );
   }
 
-  if (employeesStatus === 'failed') {
+  if (employeesStatus === AsyncStatus.Failed) {
     return (
       <div className={styles.container}>
         <div className={styles.error}>

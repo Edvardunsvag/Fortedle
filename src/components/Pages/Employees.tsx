@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectEmployees, selectEmployeesStatus } from '@/features/employees';
 import type { Employee } from '@/features/employees/types';
+import { AsyncStatus } from '@/shared/redux/enums';
 import styles from './Employees.module.scss';
 
 export const Employees = () => {
@@ -24,7 +25,7 @@ export const Employees = () => {
     }
   };
 
-  if (status === 'loading') {
+  if (status === AsyncStatus.Loading) {
     return (
       <div className={styles.pageContent}>
         <div className={styles.container}>
@@ -34,7 +35,7 @@ export const Employees = () => {
     );
   }
 
-  if (status === 'failed') {
+  if (status === AsyncStatus.Failed) {
     return (
       <div className={styles.pageContent}>
         <div className={styles.container}>

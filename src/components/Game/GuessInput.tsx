@@ -41,7 +41,6 @@ export const GuessInput = ({
     });
 
     setSuggestions(filtered.slice(0, 5));
-    // Always show suggestions if there are matches (user can still press Enter to select first)
     setShowSuggestions(filtered.length > 0);
     setSelectedIndex(-1);
   }, [value, employees]);
@@ -56,7 +55,6 @@ export const GuessInput = ({
       if (selectedIndex >= 0 && suggestions[selectedIndex]) {
         handleSelectEmployee(suggestions[selectedIndex]);
       } else if (suggestions.length > 0) {
-        // If there are suggestions, select the first one
         handleSelectEmployee(suggestions[0]);
       } else if (value.trim()) {
         handleSubmit();
@@ -94,11 +92,6 @@ export const GuessInput = ({
     if (exactMatch) {
       onGuess(exactMatch.id);
       onChange('');
-    } else {
-      // No exact match found - show suggestions if they exist
-      if (suggestions.length > 0) {
-        setShowSuggestions(true);
-      }
     }
   };
 
@@ -127,6 +120,8 @@ export const GuessInput = ({
         <input
           id="guess-input"
           ref={inputRef}
+          autoComplete="off"
+          name="guess-input"
           type="text"
           value={value}
           onChange={handleInputChange}
@@ -137,12 +132,10 @@ export const GuessInput = ({
             }
           }}
           onBlur={(e) => {
-            // Don't hide if clicking on a suggestion
             const relatedTarget = e.relatedTarget as HTMLElement;
             if (relatedTarget && relatedTarget.closest(`.${styles.suggestions}`)) {
               return;
             }
-            // Delay to allow click events on suggestions
             setTimeout(() => {
               setShowSuggestions(false);
             }, 200);
@@ -163,7 +156,6 @@ export const GuessInput = ({
             role="listbox"
           >
             {suggestions.map((employee, index) => {
-              // Always show firstName + surname in suggestions
               const displayName = `${employee.firstName} ${employee.surname}`;
               
               return (
@@ -177,7 +169,6 @@ export const GuessInput = ({
                   onClick={(e) => handleSuggestionClick(e, employee)}
                   onKeyDown={(e) => handleSuggestionKeyDown(e, employee)}
                   onMouseDown={(e) => {
-                    // Prevent blur when clicking suggestion
                     e.preventDefault();
                     e.stopPropagation();
                   }}
@@ -188,11 +179,6 @@ export const GuessInput = ({
               );
             })}
           </ul>
-        )}
-        {value.trim().length > 0 && suggestions.length === 0 && (
-          <div className={styles.noMatch} role="status" aria-live="polite">
-            {t('game.noMatch', { value })}
-          </div>
         )}
       </div>
     </div>

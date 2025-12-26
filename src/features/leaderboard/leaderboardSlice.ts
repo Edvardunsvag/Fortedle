@@ -7,6 +7,7 @@ export interface LeaderboardEntry {
   rank: number;
   name: string;
   score: number;
+  avatarImageUrl: string | null;
   submittedAt: string;
 }
 
@@ -47,14 +48,14 @@ export const fetchLeaderboard = createAppAsyncThunk(
 
 export const submitScore = createAppAsyncThunk(
   'leaderboard/submitScore',
-  async ({ name, score }: { name: string; score: number }, { rejectWithValue }) => {
+  async ({ name, score, avatarImageUrl }: { name: string; score: number; avatarImageUrl?: string }, { rejectWithValue }) => {
     try {
       const response = await fetch(getApiUrl('/api/leaderboard'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, score }),
+        body: JSON.stringify({ name, score, avatarImageUrl }),
       });
 
       if (!response.ok) {

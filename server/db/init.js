@@ -45,9 +45,23 @@ export const initDatabase = async () => {
         player_name VARCHAR(255) NOT NULL,
         score INTEGER NOT NULL,
         date DATE NOT NULL,
+        avatar_image_url TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         UNIQUE(player_name, date)
       );
+    `);
+
+    // Add avatar_image_url column if it doesn't exist (for existing databases)
+    await client.query(`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'leaderboard' AND column_name = 'avatar_image_url'
+        ) THEN
+          ALTER TABLE leaderboard ADD COLUMN avatar_image_url TEXT;
+        END IF;
+      END $$;
     `);
 
     await client.query(`

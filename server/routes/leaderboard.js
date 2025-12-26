@@ -12,7 +12,7 @@ export const getLeaderboard = async (req, res) => {
     const client = await pool.connect();
     try {
       const result = await client.query(
-        `SELECT player_name, score, created_at
+        `SELECT player_name, score, avatar_image_url, created_at
          FROM leaderboard
          WHERE date = $1
          ORDER BY score ASC, created_at ASC
@@ -24,6 +24,7 @@ export const getLeaderboard = async (req, res) => {
         rank: index + 1,
         name: row.player_name,
         score: row.score,
+        avatarImageUrl: row.avatar_image_url || null,
         submittedAt: row.created_at,
       }));
 
@@ -45,11 +46,11 @@ export const getLeaderboard = async (req, res) => {
 /**
  * Submit a score to the leaderboard
  * POST /api/leaderboard
- * Body: { name: string, score: number }
+ * Body: { name: string, score: number, avatarImageUrl?: string }
  */
 export const submitScore = async (req, res) => {
   try {
-    const { name, score } = req.body;
+    const { name, score, avatarImageUrl } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return res.status(400).json({ error: 'Name is required and must be a non-empty string' });
@@ -67,17 +68,18 @@ export const submitScore = async (req, res) => {
       // Use ON CONFLICT to update if player already submitted today
       // Keep the better (lower) score
       const result = await client.query(
-        `INSERT INTO leaderboard (player_name, score, date)
-         VALUES ($1, $2, $3)
+        `INSERT INTO leaderboard (player_name, score, date, avatar_image_url)
+         VALUES ($1, $2, $3, $4)
          ON CONFLICT (player_name, date)
          DO UPDATE SET
            score = LEAST(leaderboard.score, EXCLUDED.score),
+           avatar_image_url = COALESCE(EXCLUDED.avatar_image_url, leaderboard.avatar_image_url),
            created_at = CASE
              WHEN EXCLUDED.score < leaderboard.score THEN EXCLUDED.created_at
              ELSE leaderboard.created_at
            END
-         RETURNING player_name, score, date, created_at`,
-        [playerName, score, date]
+         RETURNING player_name, score, date, avatar_image_url, created_at`,
+        [playerName, score, date, avatarImageUrl || null]
       );
 
       res.json({
@@ -86,6 +88,7 @@ export const submitScore = async (req, res) => {
           name: result.rows[0].player_name,
           score: result.rows[0].score,
           date: result.rows[0].date,
+          avatarImageUrl: result.rows[0].avatar_image_url || null,
           submittedAt: result.rows[0].created_at,
         },
       });

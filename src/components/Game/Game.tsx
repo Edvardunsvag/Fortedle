@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
@@ -14,11 +14,13 @@ import {
   selectGameStatus,
   selectCanGuess,
 } from '@/features/game';
+import { selectAccount } from '@/features/auth';
+import { submitScore } from '@/features/leaderboard';
 import { getTodayDateString, getDateSeed, selectIndexBySeed } from '@/shared/utils/dateUtils';
+import { findMatchingEmployee } from '@/shared/utils/nameMatcher';
 import { GuessInput } from './GuessInput';
 import { GuessList } from './GuessList';
 import { GameStatus } from './GameStatus';
-import { ShareResults } from './ShareResults';
 import styles from './Game.module.scss';
 
 export const Game = () => {
@@ -30,6 +32,8 @@ export const Game = () => {
   const guesses = useAppSelector(selectGuesses);
   const gameStatus = useAppSelector(selectGameStatus);
   const canGuess = useAppSelector(selectCanGuess);
+  const account = useAppSelector(selectAccount);
+  const hasSubmittedScore = useRef(false);
 
   const [inputValue, setInputValue] = useState('');
 
@@ -67,6 +71,40 @@ export const Game = () => {
       }
     }
   }, [dispatch, employeesStatus, employees, employeeOfTheDayId]);
+
+  // Automatically submit score when game is won
+  useEffect(() => {
+    if (gameStatus === 'won' && !hasSubmittedScore.current && account && guesses.length > 0) {
+      const userName = account.name || account.username;
+      if (userName) {
+        // Find the matching employee for the logged-in user
+        const matchingEmployee = findMatchingEmployee(userName, employees);
+        const avatarImageUrl = matchingEmployee?.avatarImageUrl;
+        
+        if (matchingEmployee) {
+          console.log(`Found matching employee for ${userName}: ${matchingEmployee.name}`);
+        } else {
+          console.log(`No matching employee found for ${userName}`);
+        }
+        
+        hasSubmittedScore.current = true;
+        dispatch(submitScore({ 
+          name: userName, 
+          score: guesses.length,
+          avatarImageUrl 
+        })).catch((error) => {
+          console.error('Failed to submit score:', error);
+        });
+      }
+    }
+  }, [gameStatus, account, guesses.length, employees, dispatch]);
+
+  // Reset submission flag when game is reset (new day or re-initialized)
+  useEffect(() => {
+    if (gameStatus === 'playing' || gameStatus === 'idle') {
+      hasSubmittedScore.current = false;
+    }
+  }, [gameStatus]);
 
   const handleGuess = (employeeId: string) => {
     if (!canGuess || !employeeOfTheDayId) {
@@ -150,10 +188,6 @@ export const Game = () => {
       )}
 
       <GuessList guesses={guesses} />
-
-      {(gameStatus === 'won' || gameStatus === 'lost') && (
-        <ShareResults guesses={guesses.length} isWon={gameStatus === 'won'} />
-      )}
     </div>
   );
 };

@@ -129,6 +129,15 @@ export const Leaderboard = () => {
                   </th>
                   <th
                     style={{
+                      textAlign: 'center',
+                      padding: '1rem',
+                      width: '80px',
+                    }}
+                  >
+                    {/* Avatar column - no header text */}
+                  </th>
+                  <th
+                    style={{
                       textAlign: 'right',
                       padding: '1rem',
                       fontWeight: 600,
@@ -166,6 +175,42 @@ export const Leaderboard = () => {
                       }}
                     >
                       {entry.name}
+                    </td>
+                    <td
+                      style={{
+                        padding: '1rem',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {entry.avatarImageUrl ? (
+                        <img
+                          src={entry.avatarImageUrl}
+                          alt={`${entry.name} avatar`}
+                          style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '50%',
+                            backgroundColor: 'var(--color-border-light)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'var(--color-dark-fill)',
+                            fontSize: '1.2rem',
+                            fontWeight: 600,
+                          }}
+                        >
+                          {entry.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
                     </td>
                     <td
                       style={{

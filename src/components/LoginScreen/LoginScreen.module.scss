@@ -62,7 +62,7 @@
   font-size: 1.125rem;
   font-weight: 600;
   color: white;
-  background-color: $color-link-blue;
+  background-color: $color-dark-accent;
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -70,7 +70,7 @@
   min-width: 12rem;
 
   &:hover:not(:disabled) {
-    background-color: rgba(0, 0, 238, 0.9);
+    background-color: rgba($color-dark-accent, 0.9);
     transform: translateY(-1px);
   }
 

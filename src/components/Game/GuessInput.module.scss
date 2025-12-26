@@ -24,7 +24,6 @@
   border-radius: $radius-md;
   background-color: $color-dark-fill;
   color: $color-primary-beige;
-  transition: border-color $transition-normal, box-shadow $transition-normal;
 
   &::placeholder {
     color: $color-primary-beige;
@@ -33,7 +32,6 @@
 
   &:focus {
     outline: none;
-    border-color: $color-link-blue;
     box-shadow: 0 0 0 3px $color-overlay-blue;
   }
 

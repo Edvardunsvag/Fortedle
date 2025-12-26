@@ -1,3 +1,4 @@
+@import '../../shared/styles/variables.scss';
 .loginContainer {
   display: flex;
   flex-direction: column;
@@ -18,7 +19,7 @@
 .loginButton {
   width: 100%;
   padding: 0.5rem 1rem;
-  background-color: var(--primary-color, #007bff);
+  background-color: $color-dark-accent;
   color: white;
   border: none;
   border-radius: 0.25rem;
@@ -28,13 +29,10 @@
   transition: background-color 0.2s ease;
 
   &:hover:not(:disabled) {
-    background-color: var(--primary-hover, #0056b3);
+    background-color: rgba($color-dark-accent, 0.9);
   }
 
-  &:focus {
-    outline: 2px solid var(--primary-color, #007bff);
-    outline-offset: 2px;
-  }
+
 
   &:disabled {
     opacity: 0.6;

@@ -14,7 +14,6 @@ export const App = () => {
   const activeTab = useAppSelector(selectActiveTab);
   const employees = useAppSelector(selectEmployees);
   const employeesStatus = useAppSelector(selectEmployeesStatus);
-  const hasEmployees = employees.length > 0 && employeesStatus === 'succeeded';
 
   useEffect(() => {
     // Try to load employees from database on mount only
@@ -45,6 +44,7 @@ export const App = () => {
       <Sidebar />
       {renderPage()}
     </div>
+
   );
 };
 

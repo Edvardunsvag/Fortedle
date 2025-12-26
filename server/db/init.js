@@ -1,12 +1,35 @@
 import pg from 'pg';
 const { Pool } = pg;
 
+// Log database configuration (without password)
+const dbConfig = {
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '5432'),
+  database: process.env.DB_NAME || 'fortedle',
+  user: process.env.DB_USER || 'postgres',
+  password: process.env.DB_PASSWORD ? '***' : 'not set',
+};
+
+console.log('Database configuration:', {
+  ...dbConfig,
+  password: dbConfig.password,
+});
+
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5432'),
   database: process.env.DB_NAME || 'fortedle',
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres',
+  // Connection pool settings for Azure
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
+});
+
+// Handle pool errors
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
 });
 
 export { pool };
@@ -15,8 +38,14 @@ export { pool };
  * Initialize database schema
  */
 export const initDatabase = async () => {
+  console.log('Attempting to connect to database...');
   const client = await pool.connect();
   try {
+    // Test connection first
+    await client.query('SELECT NOW()');
+    console.log('Database connection successful');
+
+    console.log('Creating tables and indexes...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS employees (
         id VARCHAR(255) PRIMARY KEY,
@@ -75,6 +104,14 @@ export const initDatabase = async () => {
     console.log('Database initialized successfully');
   } catch (error) {
     console.error('Error initializing database:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      database: process.env.DB_NAME,
+      user: process.env.DB_USER,
+    });
     throw error;
   } finally {
     client.release();

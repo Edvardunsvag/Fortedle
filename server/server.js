@@ -78,7 +78,7 @@ app.get('/api/employees', getEmployees);
 app.get('/api/leaderboard', getLeaderboard);
 app.post('/api/leaderboard', submitScore);
 
-// Error handling middleware
+// Error handling middleware (must be last)
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({
@@ -87,47 +87,76 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Uncaught exception handler
+// Declare server variable before handlers
+let server;
+
+// Uncaught exception handler - keep process alive but log error
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
-  // Don't exit immediately - let the server try to handle it
+  console.error('Stack:', error.stack);
+  // Keep process alive - don't exit
 });
 
-// Unhandled promise rejection handler
+// Unhandled promise rejection handler - keep process alive but log error
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  // Don't exit immediately - let the server try to handle it
+  // Keep process alive - don't exit
 });
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('SIGTERM received, shutting down gracefully...');
-  server.close(() => {
-    console.log('HTTP server closed');
+  if (server) {
+    server.close(() => {
+      console.log('HTTP server closed');
+      pool.end(() => {
+        console.log('Database pool closed');
+        process.exit(0);
+      });
+    });
+  } else {
     pool.end(() => {
       console.log('Database pool closed');
       process.exit(0);
     });
-  });
+  }
 });
 
 // Start server first, then initialize database in background
-const server = app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log('Initializing database...');
-  
-  // Initialize database in background (non-blocking)
-  initDatabase()
-    .then(() => {
-      dbInitialized = true;
-      dbInitError = null;
-      console.log('Database initialized successfully');
-    })
-    .catch((error) => {
-      dbInitError = error;
-      console.error('Failed to initialize database:', error);
-      console.error('Server will continue running, but database operations may fail');
-      // Don't exit - let the server run and retry on next request
-    });
-});
+try {
+  server = app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log('Initializing database...');
+    
+    // Initialize database in background (non-blocking)
+    initDatabase()
+      .then(() => {
+        dbInitialized = true;
+        dbInitError = null;
+        console.log('Database initialized successfully');
+      })
+      .catch((error) => {
+        dbInitError = error;
+        console.error('Failed to initialize database:', error);
+        console.error('Server will continue running, but database operations may fail');
+        // Don't exit - let the server run and retry on next request
+      });
+  });
+
+  // Handle server listen errors
+  server.on('error', (error) => {
+    console.error('Server error:', error);
+    if (error.code === 'EADDRINUSE') {
+      console.error(`Port ${PORT} is already in use`);
+    } else {
+      console.error('Failed to start server:', error);
+    }
+    // Don't exit - let the error be logged
+  });
+} catch (error) {
+  console.error('Failed to start server:', error);
+  console.error('Stack:', error.stack);
+  // Exit with error code only if we can't start the server at all
+  process.exit(1);
+}
 

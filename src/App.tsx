@@ -5,6 +5,7 @@ import { Leaderboard } from './components/Pages/Leaderboard';
 import { Play } from './components/Pages/Play';
 import { Rules } from './components/Pages/Rules';
 import { Sync } from './components/Pages/Sync';
+import { Employees } from './components/Pages/Employees';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { loadEmployees, selectEmployees, selectEmployeesStatus } from './features/employees';
 import { ActiveTab, selectActiveTab } from './features/navigation';
@@ -34,6 +35,8 @@ export const App = () => {
         return <Rules />;
       case ActiveTab.Sync:
         return <Sync />;
+      case ActiveTab.Employees:
+        return <Employees />;
       default:
         return <Play />;
     }

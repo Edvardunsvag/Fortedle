@@ -7,6 +7,7 @@ export enum ActiveTab {
   Leaderboard = 'leaderboard',
   Rules = 'rules',
   Sync = 'sync',
+  Employees = 'employees',
 }
 
 interface NavigationState {

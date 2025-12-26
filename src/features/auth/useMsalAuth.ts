@@ -72,7 +72,7 @@ export const useMsalAuth = () => {
 
   return {
     isAuthenticated: accounts.length > 0,
-    isLoading: inProgress === 'login' || inProgress === 'sso',
+    isLoading: inProgress === 'login' || inProgress === 'ssoSilent',
     handleLogin,
     handleLogout,
     getAccessToken,

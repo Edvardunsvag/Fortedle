@@ -1,7 +1,7 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/api/*", "*.{css,scss,js,png,gif,ico,jpg,svg,woff,woff2,ttf,eot}"]
+    "exclude": ["/api/*", "*.{css,scss,js,mjs,png,gif,ico,jpg,svg,woff,woff2,ttf,eot,json}"]
   },
   "routes": [
     {
@@ -13,6 +13,11 @@
     "404": {
       "rewrite": "/index.html"
     }
+  },
+  "mimeTypes": {
+    ".js": "application/javascript",
+    ".mjs": "application/javascript",
+    ".json": "application/json"
   }
 }
 

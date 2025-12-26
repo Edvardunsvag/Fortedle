@@ -18,7 +18,7 @@ export const ShareResults = ({ guesses, isWon }: ShareResultsProps) => {
 
   useEffect(() => {
     // Load user name from localStorage
-    const savedName = localStorage.getItem('fortel_userName');
+    const savedName = localStorage.getItem('fortedle_userName');
     if (savedName) {
       setUserName(savedName);
     }
@@ -27,8 +27,8 @@ export const ShareResults = ({ guesses, isWon }: ShareResultsProps) => {
   useEffect(() => {
     if (userName) {
       const result = isWon
-        ? `🎉 Fortel ${new Date().toLocaleDateString()} - ${guesses} guesses\n\nGuessed by ${userName}`
-        : `Fortel ${new Date().toLocaleDateString()} - Attempted\n\nAttempted by ${userName}`;
+        ? `🎉 Fortedle ${new Date().toLocaleDateString()} - ${guesses} guesses\n\nGuessed by ${userName}`
+        : `Fortedle ${new Date().toLocaleDateString()} - Attempted\n\nAttempted by ${userName}`;
       setShareText(result);
     } else {
       setShareText('');
@@ -38,7 +38,7 @@ export const ShareResults = ({ guesses, isWon }: ShareResultsProps) => {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
     setUserName(name);
-    localStorage.setItem('fortel_userName', name);
+    localStorage.setItem('fortedle_userName', name);
     // Clear submit status when name changes
     if (hasSubmitted) {
       dispatch(clearSubmitStatus());

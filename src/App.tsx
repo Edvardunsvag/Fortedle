@@ -42,12 +42,8 @@ export const App = () => {
 
   return (
     <div className={styles.app}>
-      {hasEmployees && (
-        <>
-          <Sidebar />
-          {renderPage()}
-        </>
-      )}
+      <Sidebar />
+      {renderPage()}
     </div>
   );
 };

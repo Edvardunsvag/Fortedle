@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Script to create the Fortel PostgreSQL database
+# Script to create the Fortedle PostgreSQL database
 # Usage: ./create-db.sh [database_name] [user]
 
-DB_NAME="${1:-fortel}"
+DB_NAME="${1:-fortedle}"
 DB_USER="${2:-postgres}"
 
 echo "Creating PostgreSQL database: $DB_NAME"

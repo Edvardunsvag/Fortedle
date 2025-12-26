@@ -1,12 +1,12 @@
--- Create the Fortel database
+-- Create the Fortedle database
 -- Run this as a PostgreSQL superuser (usually 'postgres')
 
 -- Create database (if it doesn't exist)
-SELECT 'CREATE DATABASE fortel'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'fortel')\gexec
+SELECT 'CREATE DATABASE fortedle'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'fortedle')\gexec
 
--- Connect to the fortel database
-\c fortel
+-- Connect to the fortedle database
+\c fortedle
 
 -- Create employees table
 CREATE TABLE IF NOT EXISTS employees (

@@ -1,6 +1,6 @@
-# Fortel Server
+# Fortedle Server
 
-Backend server for the Fortel application that handles data synchronization and employee data management.
+Backend server for the Fortedle application that handles data synchronization and employee data management.
 
 ## Setup
 
@@ -15,7 +15,7 @@ npm install
    **Option A: Quick setup (database only, tables auto-created)**
    ```bash
    # Create the database
-   createdb -U postgres fortel
+   createdb -U postgres fortedle
    ```
    
    **Option B: Full setup with SQL script**
@@ -32,7 +32,7 @@ npm install
 cat > .env << EOF
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=fortel
+DB_NAME=fortedle
 DB_USER=postgres
 DB_PASSWORD=your_password_here
 PORT=3001
@@ -43,7 +43,7 @@ EOF
    ```
    DB_HOST=localhost
    DB_PORT=5432
-   DB_NAME=fortel
+   DB_NAME=fortedle
    DB_USER=postgres
    DB_PASSWORD=your_password_here
    PORT=3001

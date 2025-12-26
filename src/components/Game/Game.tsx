@@ -128,7 +128,7 @@ export const Game = () => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Fortel</h1>
+        <h1 className={styles.title}>Fortedle</h1>
         <p className={styles.subtitle}>Guess the employee of the day!</p>
       </header>
 

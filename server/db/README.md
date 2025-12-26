@@ -12,7 +12,7 @@ This directory contains SQL scripts for setting up the PostgreSQL database.
    psql -U postgres
    
    # Create the database
-   CREATE DATABASE fortel;
+   CREATE DATABASE fortedle;
    
    # Exit psql
    \q
@@ -20,23 +20,23 @@ This directory contains SQL scripts for setting up the PostgreSQL database.
 
 2. **Run the setup script:**
    ```bash
-   psql -U postgres -d fortel -f setup.sql
+   psql -U postgres -d fortedle -f setup.sql
    ```
 
    Or if you want to run it interactively:
    ```bash
-   psql -U postgres -d fortel
+   psql -U postgres -d fortedle
    ```
-   Then copy and paste the contents of `setup.sql` (excluding the `\c fortel` line since you're already connected).
+   Then copy and paste the contents of `setup.sql` (excluding the `\c fortedle` line since you're already connected).
 
 ### Option 2: Using createdb command
 
 ```bash
 # Create database
-createdb -U postgres fortel
+createdb -U postgres fortedle
 
 # Connect and run setup
-psql -U postgres -d fortel -f setup.sql
+psql -U postgres -d fortedle -f setup.sql
 ```
 
 ### Option 3: Let the server create tables automatically
@@ -45,7 +45,7 @@ The server will automatically create the `employees` table when it starts, but y
 
 ```bash
 # Create database only
-createdb -U postgres fortel
+createdb -U postgres fortedle
 ```
 
 Then start the server - it will create the table schema automatically.
@@ -57,7 +57,7 @@ Make sure your `.env` file in the `server` directory has the correct database cr
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=fortel
+DB_NAME=fortedle
 DB_USER=postgres
 DB_PASSWORD=your_password_here
 ```
@@ -67,7 +67,7 @@ DB_PASSWORD=your_password_here
 To verify the database is set up correctly:
 
 ```bash
-psql -U postgres -d fortel -c "\d employees"
+psql -U postgres -d fortedle -c "\d employees"
 ```
 
 This should show the structure of the `employees` table.

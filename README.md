@@ -1,4 +1,4 @@
-# Fortel
+# Fortedle
 
 An internal web application for Forte, inspired by Loldle. Guess the employee of the day!
 

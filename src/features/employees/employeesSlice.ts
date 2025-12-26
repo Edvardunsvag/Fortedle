@@ -62,7 +62,7 @@ const employeesSlice = createSlice({
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(syncEmployeesData.fulfilled, (state) => {
+      .addCase(syncEmployeesData.fulfilled, (_state) => {
         // Status will be updated by loadEmployees that runs after sync
       })
       .addCase(syncEmployeesData.rejected, (state, action) => {

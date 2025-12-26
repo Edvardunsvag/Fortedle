@@ -29,14 +29,14 @@ const corsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      // Log rejected origin but don't throw error - let CORS library handle it
+      // Log rejected origin for debugging
       console.warn(`CORS: Rejected origin: ${origin}`);
-      callback(null, false); // Return false instead of error
+      callback(new Error(`Origin ${origin} not allowed by CORS policy`));
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
   exposedHeaders: ['Content-Type'],
   maxAge: 86400, // 24 hours
   optionsSuccessStatus: 200, // Some legacy browsers choke on 204
@@ -45,6 +45,19 @@ const corsOptions = {
 
 // CORS middleware - must be before body parsing
 app.use(cors(corsOptions));
+
+// Explicit OPTIONS handler for all routes - handle preflight requests
+app.options('*', (req, res) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Max-Age', '86400');
+  }
+  res.sendStatus(200);
+});
 
 // Body parsing - only for non-OPTIONS requests
 app.use((req, res, next) => {
@@ -95,9 +108,6 @@ app.post('/api/sync', syncEmployees);
 app.get('/api/employees', getEmployees);
 app.get('/api/leaderboard', getLeaderboard);
 app.post('/api/leaderboard', submitScore);
-
-// Explicit OPTIONS handler as fallback (shouldn't be needed with CORS middleware, but just in case)
-app.options('*', cors(corsOptions));
 
 // Error handling middleware (must be last)
 app.use((err, req, res, next) => {

@@ -16,6 +16,7 @@ const allowedOrigins = [
   'http://localhost:5173', // Vite dev server
   'https://jolly-coast-0123c4103.4.azurestaticapps.net', // Old frontend (if still needed)
   'https://kind-plant-05da66803.6.azurestaticapps.net', // New frontend
+  'https://fortedle.hackathon.forteapps.net', // Custom domain
 ];
 
 const corsOptions = {

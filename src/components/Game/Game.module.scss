@@ -44,6 +44,17 @@
   color: $color-dark-accent;
 }
 
+.attemptedMessage {
+  text-align: center;
+  padding: $spacing-lg;
+  margin: $spacing-lg 0;
+  font-size: 1.125rem;
+  color: $color-dark-accent;
+  background-color: $color-overlay-accent;
+  border-radius: $radius-md;
+  border: 1px solid $color-dark-accent;
+}
+
 @media (max-width: 768px) {
   .title {
     font-size: 2rem;

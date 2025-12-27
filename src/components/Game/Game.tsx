@@ -15,10 +15,11 @@ import {
   selectCanGuess,
 } from '@/features/game';
 import { selectAccount } from '@/features/auth';
-import { submitScore } from '@/features/leaderboard';
+import { submitScore, fetchLeaderboard, selectLeaderboard } from '@/features/leaderboard';
 import { AsyncStatus } from '@/shared/redux/enums';
 import { getTodayDateString, getDateSeed, selectIndexBySeed } from '@/shared/utils/dateUtils';
 import { findMatchingEmployee } from '@/shared/utils/nameMatcher';
+import { compareTwoStrings } from 'string-similarity';
 import { GuessInput } from './GuessInput';
 import { GuessList } from './GuessList';
 import { GameStatus } from './GameStatus';
@@ -32,8 +33,36 @@ export const Game = () => {
   const employeeOfTheDayId = useAppSelector(selectEmployeeOfTheDayId);
   const guesses = useAppSelector(selectGuesses);
   const gameStatus = useAppSelector(selectGameStatus);
-  const canGuess = useAppSelector(selectCanGuess);
   const account = useAppSelector(selectAccount);
+  const userId = account?.localAccountId || account?.username || null;
+  const userName = account?.name || account?.username || null;
+  const leaderboard = useAppSelector(selectLeaderboard);
+  
+  // Check if user is in today's leaderboard using the same string comparison as nameMatcher
+  const normalizeName = (name: string): string => {
+    return name
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, ''); // Remove diacritics
+  };
+  
+  const isInLeaderboard = userName && leaderboard?.leaderboard.some((entry) => {
+    const normalizedUserName = normalizeName(userName);
+    const normalizedEntryName = normalizeName(entry.name);
+    
+    // Try exact match first
+    if (normalizedUserName === normalizedEntryName) {
+      return true;
+    }
+    
+    // Use string similarity with threshold (same as nameMatcher)
+    const similarity = compareTwoStrings(normalizedUserName, normalizedEntryName);
+    return similarity >= 0.8; // Higher threshold for leaderboard matching (80% similarity)
+  }) || false;
+  
+  const canGuess = useAppSelector((state) => selectCanGuess(state, userId, isInLeaderboard));
   const hasSubmittedScore = useRef(false);
 
   const [inputValue, setInputValue] = useState('');
@@ -45,6 +74,11 @@ export const Game = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount
+
+  // Load leaderboard on mount to check if user is already in it
+  useEffect(() => {
+    dispatch(fetchLeaderboard());
+  }, [dispatch]);
 
   useEffect(() => {
     if (employeesStatus === AsyncStatus.Succeeded && employees.length > 0) {
@@ -93,9 +127,14 @@ export const Game = () => {
           name: userName, 
           score: guesses.length,
           avatarImageUrl 
-        })).catch((error) => {
-          console.error('Failed to submit score:', error);
-        });
+        }))
+          .then(() => {
+            // Refresh leaderboard after successful submission
+            dispatch(fetchLeaderboard());
+          })
+          .catch((error) => {
+            console.error('Failed to submit score:', error);
+          });
       }
     }
   }, [gameStatus, account, guesses.length, employees, dispatch]);
@@ -128,7 +167,7 @@ export const Game = () => {
     }
 
     console.log('Making guess:', { guessed: guessedEmployee.name, target: targetEmployee.name });
-    dispatch(makeGuess({ guessed: guessedEmployee, target: targetEmployee }));
+    dispatch(makeGuess({ guessed: guessedEmployee, target: targetEmployee, userId }));
     setInputValue('');
   };
 
@@ -173,18 +212,27 @@ export const Game = () => {
         <p className={styles.subtitle}>{t('game.subtitle')}</p>
       </header>
 
+      
       <GameStatus
         status={gameStatus}
         guesses={guesses}
       />
 
-      {gameStatus === 'playing' && (
+      {isInLeaderboard && gameStatus === 'playing' && (
+        <div className={styles.attemptedMessage} role="alert">
+          {t('game.alreadyAttempted')}
+        </div>
+      )}
+
+     
+
+      {gameStatus === 'playing' && !isInLeaderboard && (
         <GuessInput
           value={inputValue}
           onChange={setInputValue}
           onGuess={handleGuess}
           employees={employees}
-          disabled={!canGuess}
+          disabled={!canGuess || isInLeaderboard}
         />
       )}
 

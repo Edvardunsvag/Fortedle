@@ -18,7 +18,9 @@
     "noMatch": "No employees found matching \"{{value}}\"",
     "guesses": "Guesses",
     "guess": "guess",
-    "guesses_plural": "guesses"
+    "guesses_plural": "guesses",
+    "alreadyAttempted": "You have already made your attempt today. Come back tomorrow for a new challenge!",
+    "comeBackTomorrow": "Come back tomorrow!"
   },
   "gameStatus": {
     "congratulations": "🎉 Congratulations!",

@@ -18,7 +18,9 @@
     "noMatch": "Ingen ansatte funnet som matcher \"{{value}}\"",
     "guesses": "Gjetninger",
     "guess": "gjetning",
-    "guesses_plural": "gjetninger"
+    "guesses_plural": "gjetninger",
+    "alreadyAttempted": "Du har allerede gjort ditt forsøk i dag. Kom tilbake i morgen for en ny utfordring!",
+    "comeBackTomorrow": "Kom tilbake i morgen!"
   },
   "gameStatus": {
     "congratulations": "🎉 Gratulerer!",

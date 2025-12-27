@@ -15,6 +15,8 @@ const initialState: GameState = {
   status: 'idle',
   maxGuesses: 6,
   currentDate: getTodayDateString(),
+  attemptedByUserId: null,
+  attemptDate: null,
 };
 
 const calculateHints = (
@@ -126,6 +128,8 @@ const gameSlice = createSlice({
         state.currentDate = today;
         state.guesses = [];
         state.status = 'playing';
+        state.attemptedByUserId = null;
+        state.attemptDate = null;
       } else if (state.status === 'idle') {
         state.status = 'playing';
       }
@@ -134,13 +138,13 @@ const gameSlice = createSlice({
     },
     makeGuess: (
       state,
-      action: PayloadAction<{ guessed: Employee; target: Employee }>
+      action: PayloadAction<{ guessed: Employee; target: Employee; userId?: string | null }>
     ) => {
       if (state.status !== 'playing') {
         return;
       }
 
-      const { guessed, target } = action.payload;
+      const { guessed, target, userId } = action.payload;
       const isCorrect = guessed.id === target.id;
       const hints = calculateHints(guessed, target);
 
@@ -153,6 +157,13 @@ const gameSlice = createSlice({
       };
 
       state.guesses.push(guess);
+
+      // Track attempt for logged-in users
+      if (userId) {
+        const today = getTodayDateString();
+        state.attemptedByUserId = userId;
+        state.attemptDate = today;
+      }
 
       if (isCorrect) {
         state.status = 'won';
@@ -171,8 +182,40 @@ export const selectGuesses = (state: RootState): Guess[] => state.game.guesses;
 export const selectGameStatus = (state: RootState): GameState['status'] =>
   state.game.status;
 
-export const selectCanGuess = (state: RootState): boolean =>
-  state.game.status === 'playing';
+export const selectCanGuess = (state: RootState, userId?: string | null, isInLeaderboard?: boolean): boolean => {
+  if (state.game.status !== 'playing') {
+    return false;
+  }
+
+  // If user is in leaderboard, they can't guess
+  if (isInLeaderboard) {
+    return false;
+  }
+
+  // If user is logged in, check if they've already attempted today
+  // But allow them to continue if they're already in the middle of their attempt (have guesses)
+  if (userId && state.game.guesses.length === 0) {
+    const today = getTodayDateString();
+    const hasAttemptedToday = 
+      state.game.attemptedByUserId === userId && 
+      state.game.attemptDate === today;
+    
+    if (hasAttemptedToday) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+export const selectHasAttemptedToday = (state: RootState, userId?: string | null): boolean => {
+  if (!userId) {
+    return false;
+  }
+  
+  const today = getTodayDateString();
+  return state.game.attemptedByUserId === userId && state.game.attemptDate === today;
+};
 
 export const gameReducer = gameSlice.reducer;
 

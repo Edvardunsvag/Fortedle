@@ -4,6 +4,7 @@ import type { RootState } from '@/app/store';
 import type { Employee } from '@/features/employees';
 import type { GameState, Guess } from './types';
 import { HintType, HintResult } from './types';
+import { hashEmployeeId } from '@/shared/utils/hashUtils';
 
 const getTodayDateString = (): string => {
   return new Date().toISOString().split('T')[0];
@@ -134,7 +135,9 @@ const gameSlice = createSlice({
         state.status = 'playing';
       }
       
-      state.employeeOfTheDayId = action.payload;
+      // Store hashed employee ID (action.payload is the plain employee ID)
+      const hashedId = hashEmployeeId(action.payload, today);
+      state.employeeOfTheDayId = hashedId;
     },
     makeGuess: (
       state,

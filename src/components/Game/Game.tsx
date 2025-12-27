@@ -6,6 +6,7 @@ import {
   loadEmployees,
   selectEmployees,
   selectEmployeesStatus,
+  type Employee,
 } from '@/features/employees';
 import {
   initializeGame,
@@ -21,6 +22,7 @@ import { AsyncStatus } from '@/shared/redux/enums';
 import { getTodayDateString, getDateSeed, selectIndexBySeed } from '@/shared/utils/dateUtils';
 import { findMatchingEmployee } from '@/shared/utils/nameMatcher';
 import { compareTwoStrings } from 'string-similarity';
+import { hashEmployeeId, findEmployeeByHash } from '@/shared/utils/hashUtils';
 import { GuessInput } from './GuessInput';
 import { GuessList } from './GuessList';
 import { GameStatus } from './GameStatus';
@@ -64,7 +66,8 @@ export const Game = () => {
     return similarity >= 0.8; // Higher threshold for leaderboard matching (80% similarity)
   }) || false;
   
-  const canGuess = useAppSelector((state) => selectCanGuess(state, userId, isInLeaderboard));
+  // const canGuess = useAppSelector((state) => selectCanGuess(state, userId, isInLeaderboard));
+  const canGuess = true;
   
   const hasSubmittedScore = useRef(false);
   const hasTriggeredConfetti = useRef(false);
@@ -93,8 +96,9 @@ export const Game = () => {
       const needsInitialization = !employeeOfTheDayId;
       
       // Check if the current employee of the day still exists in the list
+      // Compare by hashing each employee ID with today's date
       const currentEmployeeExists = employeeOfTheDayId 
-        ? employees.some(emp => emp.id === employeeOfTheDayId)
+        ? employees.some(emp => hashEmployeeId(emp.id, today) === employeeOfTheDayId)
         : false;
       
       if (needsInitialization || !currentEmployeeExists) {
@@ -105,7 +109,6 @@ export const Game = () => {
         const selectedEmployee = employees[index];
         
         if (selectedEmployee) {
-          console.log(`Selected employee of the day: ${selectedEmployee.name} (${selectedEmployee.id})`);
           dispatch(initializeGame(selectedEmployee.id));
         }
       }
@@ -227,10 +230,12 @@ export const Game = () => {
       return;
     }
 
-    const targetEmployee = employees.find((emp) => emp.id === employeeOfTheDayId);
+    // Find target employee by comparing hashed IDs
+    const today = getTodayDateString();
+    const targetEmployee = findEmployeeByHash<Employee>(employees, employeeOfTheDayId, today);
 
     if (!targetEmployee) {
-      console.error('Target employee not found:', employeeOfTheDayId);
+      console.error('Target employee not found for hash:', employeeOfTheDayId);
       return;
     }
 

@@ -13,14 +13,25 @@ export const GuessList = ({ guesses }: GuessListProps) => {
   const { t } = useTranslation();
   const [animatedGuesses, setAnimatedGuesses] = useState<Set<number>>(new Set());
   const previousLengthRef = useRef<number>(0);
+  const initialLengthRef = useRef<number>(0);
+  const isInitializedRef = useRef<boolean>(false);
 
   useEffect(() => {
+    // Initialize all existing guesses as animated when guesses first appear
+    if (guesses.length > 0 && !isInitializedRef.current) {
+      // Mark all existing guesses as animated (they should be flipped immediately)
+      setAnimatedGuesses(new Set(guesses.map((_, index) => index)));
+      previousLengthRef.current = guesses.length;
+      initialLengthRef.current = guesses.length;
+      isInitializedRef.current = true;
+    }
+    
     // Only trigger animation when a new guess is added (length increases)
     if (guesses.length > previousLengthRef.current) {
       const lastIndex = guesses.length - 1;
       // Trigger animation for the new guess after a short delay
       setTimeout(() => {
-        setAnimatedGuesses(new Set([lastIndex]));
+        setAnimatedGuesses((prev) => new Set([...prev, lastIndex]));
       }, 100);
     }
     previousLengthRef.current = guesses.length;
@@ -69,8 +80,17 @@ export const GuessList = ({ guesses }: GuessListProps) => {
           <tbody>
             {guesses.map((guess, guessIndex) => {
               const isAnimated = animatedGuesses.has(guessIndex);
+              // Pre-existing guesses (from before component mount) should flip immediately
+              const isPreExisting = guessIndex < initialLengthRef.current;
               const baseDelay = 400; // Base delay in ms
               const delayPerBox = 400; // Delay between each box
+              
+              // Calculate delay: 0 for pre-existing guesses, calculated delay for new animated guesses
+              const getDelay = (boxIndex: number): number => {
+                if (!isAnimated) return -1;
+                if (isPreExisting) return 0; // Flip immediately for existing guesses
+                return baseDelay + delayPerBox * boxIndex; // Animate new guesses
+              };
 
               return (
                 <tr key={`${guess.employeeId}-${guessIndex}`} className={styles.guessRow}>
@@ -97,7 +117,7 @@ export const GuessList = ({ guesses }: GuessListProps) => {
                       label={t('guessList.department')}
                       value={getHintValue(guess, HintType.Department)}
                       result={getHintResult(guess, HintType.Department)}
-                      delay={isAnimated ? baseDelay + delayPerBox * 0 : -1}
+                      delay={getDelay(0)}
                     />
                   </td>
                   <td className={styles.hintCell}>
@@ -105,7 +125,7 @@ export const GuessList = ({ guesses }: GuessListProps) => {
                       label={t('guessList.office')}
                       value={getHintValue(guess, HintType.Office)}
                       result={getHintResult(guess, HintType.Office)}
-                      delay={isAnimated ? baseDelay + delayPerBox * 1 : -1}
+                      delay={getDelay(1)}
                     />
                   </td>
                   <td className={styles.hintCell}>
@@ -113,7 +133,7 @@ export const GuessList = ({ guesses }: GuessListProps) => {
                       label={t('guessList.teams')}
                       value={getHintValue(guess, HintType.Teams)}
                       result={getHintResult(guess, HintType.Teams)}
-                      delay={isAnimated ? baseDelay + delayPerBox * 2 : -1}
+                      delay={getDelay(2)}
                     />
                   </td>
                   <td className={styles.hintCell}>
@@ -121,7 +141,7 @@ export const GuessList = ({ guesses }: GuessListProps) => {
                       label={t('guessList.age')}
                       value={getHintValue(guess, HintType.Age)}
                       result={getHintResult(guess, HintType.Age)}
-                      delay={isAnimated ? baseDelay + delayPerBox * 3 : -1}
+                      delay={getDelay(3)}
                       showArrow={getHintArrow(guess, HintType.Age).show}
                       arrowDirection={getHintArrow(guess, HintType.Age).direction}
                     />
@@ -131,7 +151,7 @@ export const GuessList = ({ guesses }: GuessListProps) => {
                       label={t('guessList.supervisor')}
                       value={getHintValue(guess, HintType.Supervisor)}
                       result={getHintResult(guess, HintType.Supervisor)}
-                      delay={isAnimated ? baseDelay + delayPerBox * 4 : -1}
+                      delay={getDelay(4)}
                     />
                   </td>
                 </tr>
